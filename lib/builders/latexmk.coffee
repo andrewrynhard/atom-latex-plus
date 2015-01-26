@@ -41,21 +41,12 @@ class LatexmkBuilder extends Builder
     ]
 
     enableShellEscape = atom.config.get('texlicious.enableShellEscape')
-    customEngine = atom.config.get('texlicious.customEngine')
     engine = atom.config.get('texlicious.engine')
-
     args.push('-shell-escape') if enableShellEscape?
-
-    if customEngine
-      args.push("-pdflatex=\"#{customEngine}\"")
-    else if engine? and engine isnt 'pdflatex'
-      args.push("-#{engine}")
-
+    args.push("-#{engine}")
     if outdir = atom.config.get('texlicious.outputDirectory')
       dir = path.dirname(filePath)
       outdir = path.join(dir, outdir)
       args.push("-outdir=#{outdir}")
-
     args.push("#{filePath}")
-
     args
