@@ -1,13 +1,13 @@
 {
-  "name": "tex",
+  "name": "texlicious",
   "main": "./index",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "A package that provides productivity tools for multiple flavors of TeX.",
-  "repository": "https://github.com/arynhard/atom-tex",
+  "repository": "https://github.com/arynhard/atom-texlicious",
   "license": "MIT",
   "activationEvents": [
-    "tex:build",
-    "tex:watch"
+    "texlicious:build",
+    "texlicious:watch"
   ],
   "engines": {
     "atom": ">=0.174.0, <2.0.0"

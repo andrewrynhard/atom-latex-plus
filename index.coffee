@@ -1,1 +1,1 @@
-module.exports = require "./lib/tex"
+module.exports = require "./lib/texlicious"

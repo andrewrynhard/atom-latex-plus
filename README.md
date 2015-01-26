@@ -1,1 +1,1 @@
-# atom-tex
+# atom-texlicious

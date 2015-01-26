@@ -13,8 +13,8 @@ module.exports =
   config: _.clone(require('./config-schema'))
 
   activate: (state) ->
-    atom.workspaceView.command 'latex:build', => @build()
-    atom.workspaceView.command 'latex:watch', => @watch()
+    atom.workspaceView.command 'texlicious:build', => @build()
+    atom.workspaceView.command 'texlicious:watch', => @watch()
 
   deactivate: -> # ...
 
