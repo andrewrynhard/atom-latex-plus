@@ -1,7 +1,7 @@
 {
   "name": "texlicious",
   "main": "./lib/texlicious",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A package that provides productivity tools for multiple flavors of TeX.",
   "repository": "https://github.com/arynhard/atom-texlicious",
   "license": "MIT",
