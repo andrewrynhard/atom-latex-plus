@@ -85,8 +85,8 @@ module.exports =
     new LatexmkBuilder()
 
   formatTexInputs: ->
-    @texInputs = atom.config.get('latex.texInputs')
+    @texInputs = atom.config.get('texlicious.texInputs')
     if @texInputs?
       match = @texInputs.match(texInputsPattern)
       unless match?
-        atom.config.set('latex.texInputs', @texInputs.replace(/(^.*[A-Za-z0-9_])/, "$1\/\/:"))
+        atom.config.set('texlicious.texInputs', @texInputs.replace(/(^.*[A-Za-z0-9_])/, "$1\/\/:"))

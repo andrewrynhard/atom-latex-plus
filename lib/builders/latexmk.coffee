@@ -40,9 +40,9 @@ class LatexmkBuilder extends Builder
       '-file-line-error'
     ]
 
-    enableShellEscape = atom.config.get('latex.enableShellEscape')
-    customEngine = atom.config.get('latex.customEngine')
-    engine = atom.config.get('latex.engine')
+    enableShellEscape = atom.config.get('texlicious.enableShellEscape')
+    customEngine = atom.config.get('texlicious.customEngine')
+    engine = atom.config.get('texlicious.engine')
 
     args.push('-shell-escape') if enableShellEscape?
 
@@ -51,11 +51,11 @@ class LatexmkBuilder extends Builder
     else if engine? and engine isnt 'pdflatex'
       args.push("-#{engine}")
 
-    if outdir = atom.config.get('latex.outputDirectory')
+    if outdir = atom.config.get('texlicious.outputDirectory')
       dir = path.dirname(filePath)
       outdir = path.join(dir, outdir)
+      args.push("-outdir=#{outdir}")
 
-    args.push("-outdir=#{outdir}")
     args.push("#{filePath}")
 
     args

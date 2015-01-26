@@ -16,13 +16,13 @@ class Builder
   constructChildProcessOptions: ->
     env = _.clone(process.env)
     env[@envPathKey] = childPath if childPath = @constructPath()
-    env["TEXINPUTS"]  = atom.config.get('latex.texInputs') ? ''
+    env["TEXINPUTS"]  = atom.config.get('texlicious.texInputs') ? ''
     options = env: env
     options.env['max_print_line'] = 1000  # Max log file line length.
     options
 
   constructPath: ->
-    texPath = atom.config.get('latex.texPath')?.trim()
+    texPath = atom.config.get('texlicious.texPath')?.trim()
     texPath = @defaultTexPath() unless texPath?.length
     texPath = texPath.replace('$PATH', process.env[@envPathKey])
 
