@@ -1,12 +1,17 @@
 'menu': [
   {
-    'label': 'Packages'
+    label: 'Packages'
     'submenu': [
-      'label': 'TeXlicious'
+      label: 'TeXlicious'
       'submenu': [
-        { 'label': 'Build', 'command': 'texlicious:build' },
-        { 'label': 'Watch', 'command': 'texlicious:watch' }
+        { label: 'Build TeX File', command: 'texlicious:build' },
+        { label: 'Watch TeX File', command: 'texlicious:watch' }
       ]
     ]
   }
 ]
+'context-menu':
+  '.tree-view': [
+    { label: 'Build TeX File', command: 'texlicious:build' },
+    { label: 'Watch TeX File', command: 'texlicious:watch' }
+  ]
