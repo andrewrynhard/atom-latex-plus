@@ -8,7 +8,7 @@ class Logger
     logContents = fs.readFileSync(logFile)
 
   resolveLogFilePath: (texFilePath) ->
-    outputDirectory = atom.config.get('latex.outputDirectory') ? ''
+    outputDirectory = atom.config.get('texlicious.outputDirectory') ? ''
     currentDirectory = path.dirname(texFilePath)
     fileName = path.basename(texFilePath).replace(/\.tex|\.lhs$/, '.log')
     logFilePath = path.join(currentDirectory, outputDirectory, fileName)
