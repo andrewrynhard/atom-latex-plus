@@ -1,0 +1,20 @@
+{
+  "name": "tex",
+  "main": "./index",
+  "version": "0.1.0",
+  "description": "A package that provides productivity tools for multiple flavors of TeX.",
+  "repository": "https://github.com/arynhard/atom-tex",
+  "license": "MIT",
+  "activationEvents": [
+    "tex:build",
+    "tex:watch"
+  ],
+  "engines": {
+    "atom": ">=0.174.0, <2.0.0"
+  },
+  "dependencies": {
+    "atom-space-pen-views": "~2.0.3",
+    "fs-plus": "~2.3.0",
+    "underscore-plus": "~1.5.1"
+  }
+}

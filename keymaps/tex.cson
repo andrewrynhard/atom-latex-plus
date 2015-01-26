@@ -1,0 +1,3 @@
+'atom-text-editor':
+  'ctrl-alt-b': 'latex:build'
+  'ctrl-alt-w': 'latex:watch'

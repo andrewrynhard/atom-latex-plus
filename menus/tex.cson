@@ -1,0 +1,12 @@
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'TeX'
+      'submenu': [
+        { 'label': 'Build', 'command': 'tex:build' },
+        { 'label': 'Watch', 'command': 'tex:watch' }
+      ]
+    ]
+  }
+]

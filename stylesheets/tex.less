@@ -1,0 +1,81 @@
+@import "ui-variables";
+
+body {
+  background: #2a2926;
+}
+
+// log display
+.panel-heading {
+  padding: 2px;
+  text-align: center;
+  .btn {
+    top: 0px;
+  }
+}
+
+.log-panel {
+  &.panel {
+    margin-bottom: 0px;
+    white-space: pre;
+    word-wrap: break-word;
+    font-size: 14px;
+    font-family: monospace;
+  }
+}
+
+// loader
+@boxSize: 5;
+@color: #dfdfdf;
+@color2: #4f4d49;
+
+.spin-box {
+  position: absolute;
+  margin: auto;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 100%;
+  width: @boxSize * 1px;
+  height: @boxSize * 1px;
+  box-shadow:
+  @boxSize*1px  @boxSize*1px @color2,
+  @boxSize*-1px  @boxSize*1px @color,
+  @boxSize*-1px  @boxSize*-1px @color2,
+  @boxSize*1px  @boxSize*-1px @color;
+  -webkit-animation: spin ease infinite 4s;
+}
+
+@-webkit-keyframes spin {
+  0%, 100% {
+    box-shadow:
+    @boxSize*1px  @boxSize*1px @color2,
+    @boxSize*-1px  @boxSize*1px @color,
+    @boxSize*-1px  @boxSize*-1px @color2,
+    @boxSize*1px  @boxSize*-1px @color;
+  }
+
+  25% {
+    box-shadow:
+    @boxSize*-1px  @boxSize*1px @color,
+    @boxSize*-1px  @boxSize*-1px @color2,
+    @boxSize*1px  @boxSize*-1px @color,
+    @boxSize*1px  @boxSize*1px @color2;
+  }
+
+  50% {
+    box-shadow:
+    @boxSize*-1px  @boxSize*-1px @color2,
+    @boxSize*1px  @boxSize*-1px @color,
+    @boxSize*1px  @boxSize*1px @color2,
+    @boxSize*-1px  @boxSize*1px @color;
+  }
+
+  75% {
+    box-shadow:
+    @boxSize*1px  @boxSize*-1px @color,
+    @boxSize*1px  @boxSize*1px @color2,
+    @boxSize*-1px  @boxSize*1px @color,
+    @boxSize*-1px  @boxSize*-1px @color2;
+  }
+}
