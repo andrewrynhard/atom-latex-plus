@@ -54,8 +54,8 @@ class LatexmkBuilder extends Builder
     if outdir = atom.config.get('latex.outputDirectory')
       dir = path.dirname(filePath)
       outdir = path.join(dir, outdir)
+      args.push("-outdir=#{outdir}")
 
-    args.push("-outdir=#{outdir}")
     args.push("#{filePath}")
 
     args
