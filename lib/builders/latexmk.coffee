@@ -1,36 +1,29 @@
+{exec, spawn} = require 'child_process'
 child_process = require 'child_process'
 fs = require 'fs-plus'
 path = require 'path'
 Builder = require '../builder'
 
 module.exports =
-class LatexmkBuilder extends Builder
-  # TODO: Add support for killing the exec process.
-  # TODO: kill all child processes on exit.
+class Latexmk extends Builder
   build: (args, options, callback) ->
     escapedArgs = (item.replace(' ', '\\ ') for item in args)
     command = "latexmk #{escapedArgs.join(' ')}"
-    proc = child_process.exec command, options, (error, stdout, stderr) ->
+    proc = exec command, options, (error, stdout, stderr) ->
       if error?
         callback(error.code)
       else
         callback(0)
     proc
 
-  watch: (args, options, callback) ->
+  watch: (args, options, @indicator, callback) ->
     command = 'latexmk'
-    args.push('-silent','-pvc')
-    proc = child_process.spawn command, args, options
-    proc.stdout.on 'data', (data) ->
-      console.log('stdout: ' + data.toString())
-      callback()
-    proc.stderr.on 'data', (data) ->
-      console.log('stderr: ' + data.toString())
-      callback()
-    proc.on 'exit', (statusCode) ->
-      callback(statusCode)
+    proc = spawn command, args, options
+    @indicator.showWatchIndicator({proc: proc})
+    proc.on 'exit', (exitCode) -> callback(exitCode)
+    process.on 'exit', () -> proc.kill()
 
-  constructArgs: (filePath) ->
+  latexmkArgs: (texFile, shouldWatch) ->
     args = [
       '-interaction=nonstopmode'
       '-f'
@@ -42,11 +35,12 @@ class LatexmkBuilder extends Builder
 
     enableShellEscape = atom.config.get('texlicious.enableShellEscape')
     engine = atom.config.get('texlicious.engine')
+    outputDirectory = atom.config.get('texlicious.outputDirectory')
     args.push('-shell-escape') if enableShellEscape?
     args.push("-#{engine}")
-    if outdir = atom.config.get('texlicious.outputDirectory')
-      dir = path.dirname(filePath)
-      outdir = path.join(dir, outdir)
-      args.push("-outdir=#{outdir}")
-    args.push("#{filePath}")
+    if shouldWatch
+      args.push('-silent','-pvc','-view=none')
+    args.push("-outdir=#{path.join(path.dirname(texFile), outputDirectory)}") if outputDirectory?
+    args.push("#{texFile}")
+
     args

@@ -3,11 +3,15 @@
 module.exports =
 class WatchIndicator extends View
   @content: ->
-    @div class: 'inline-block', =>
-      @button click: 'stop',class: 'btn', "Stop"
+    @div tabIndex: -1, class: 'panel log-panel panel-bottom', =>
+      @button click: 'stop', class: 'btn', =>
+        @span 'Stop Watching'
+      @span class: 'spin-box'
 
   initialize: (params) ->
-      @proc = params.proc
+    @proc = params.proc
+    atom.workspace.addBottomPanel
+      item: this
 
   destroy: ->
     @remove()

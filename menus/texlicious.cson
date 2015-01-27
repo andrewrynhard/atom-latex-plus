@@ -4,14 +4,14 @@
     'submenu': [
       label: 'TeXlicious'
       'submenu': [
-        { label: 'Build TeX File', command: 'texlicious:build' },
-        { label: 'Watch TeX File', command: 'texlicious:watch' }
+        { label: 'Build', command: 'texlicious:build' },
+        { label: 'Watch', command: 'texlicious:watch' }
       ]
     ]
   }
 ]
 'context-menu':
   '.tree-view': [
-    { label: 'Build TeX File', command: 'texlicious:build' },
-    { label: 'Watch TeX File', command: 'texlicious:watch' }
+    { label: 'Build', command: 'texlicious:build' },
+    { label: 'Watch', command: 'texlicious:watch' }
   ]
