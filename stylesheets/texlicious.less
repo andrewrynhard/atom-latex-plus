@@ -14,13 +14,12 @@ body {
 }
 
 .log-panel {
-  &.panel {
-    margin-bottom: 0px;
-    white-space: pre;
-    word-wrap: break-word;
-    font-size: 14px;
-    font-family: monospace;
-  }
+  margin-bottom: 0px;
+  white-space: pre;
+  overflow: scroll;
+  word-wrap: break-word;
+  font-size: 14px;
+  font-family: monospace;
 }
 
 // loader
@@ -44,6 +43,7 @@ body {
   @boxSize*-1px  @boxSize*-1px @color2,
   @boxSize*1px  @boxSize*-1px @color;
   -webkit-animation: spin ease infinite 4s;
+  transform: translateZ(0);
 }
 
 @-webkit-keyframes spin {

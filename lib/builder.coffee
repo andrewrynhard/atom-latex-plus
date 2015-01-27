@@ -8,15 +8,11 @@ class Builder
       when 'win32' then 'Path'
       else 'PATH'
 
-  build: (args, options, callback) -> undefined
-  watch: (args, options, callback) -> undefined
-  constructArgs: (filePath) -> undefined
-  parseLogFile: (texFilePath) -> undefined
-
-  constructChildProcessOptions: ->
+  setChildProcessEnv: (shouldWatch) ->
     env = _.clone(process.env)
     env[@envPathKey] = childPath if childPath = @constructPath()
-    env["TEXINPUTS"]  = atom.config.get('texlicious.texInputs') ? ''
+    env['TEXINPUTS']  = atom.config.get('texlicious.texInputs') ? ''
+    env['timeout'] = 60000 if shouldWatch?
     options = env: env
     options.env['max_print_line'] = 1000  # Max log file line length.
     options

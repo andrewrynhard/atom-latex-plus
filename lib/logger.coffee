@@ -5,7 +5,16 @@ module.exports =
 class Logger
   readLogFile: (texFilePath) ->
     logFile = @resolveLogFilePath(texFilePath)
-    logContents = fs.readFileSync(logFile)
+    try
+      logContents = fs.readFileSync(logFile)
+    catch e
+      if e.code is 'ENOENT'
+        logContents = e
+      else
+        logContents = e
+        throw (e)
+
+    logContents
 
   resolveLogFilePath: (texFilePath) ->
     outputDirectory = atom.config.get('texlicious.outputDirectory') ? ''
