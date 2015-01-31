@@ -1,5 +1,5 @@
 # Changelog
-## 2.0.0
+## 0.2.0
   * Complete rewrite of code.
   * Improved error handling.
   * Improved `watch` feature.
