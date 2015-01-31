@@ -19,22 +19,17 @@ class Latexmk
     proc
 
   args: (texFile) ->
-    args = [
-      '-interaction=nonstopmode'
-      '-f'
-      '-cd'
-      '-pdf'
-      '-synctex=1'
-      '-file-line-error'
-    ]
+    latexmkArgs = {
+      default: '-interaction=nonstopmode -f -cd -pdf -synctex=1 -file-line-error'
+    }
 
     shellEscapeEnabled = atom.config.get('texlicious.shellEscapeEnabled')
     program = atom.config.get('texlicious.texFlavor')
     outputDirectory = atom.config.get('texlicious.outputDirectory')
 
-    args.push('-shell-escape') if shellEscapeEnabled
-    args.push("-#{program}") if program? and program isnt 'pdflatex'
-    args.push("-outdir=#{path.join(path.dirname(texFile), outputDirectory)}") if outputDirectory?
-    args.push("#{texFile}")
+    latexmkArgs.shellEscape = '-shell-escape' if shellEscapeEnabled
+    latexmkArgs.program = "-#{program}" if program? and program isnt 'pdflatex'
+    latexmkArgs.outdir = "-outdir=#{path.join(atom.project.getRootDirectory().getPath(), outputDirectory)}" if outputDirectory?
+    latexmkArgs.root = "#{texFile}"
 
-    args
+    latexmkArgs

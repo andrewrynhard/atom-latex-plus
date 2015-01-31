@@ -1,4 +1,5 @@
 fs = require 'fs'
+path = require 'path'
 
 magicCommentPattern = ///
   ^%!TEX # Find line starting with %!TEX
@@ -27,3 +28,7 @@ class MagicComments
       magicComments[magicKey[0]] = magicValue[1]
 
     magicComments
+
+  args: (magicComments) ->
+    if magicComments.root?
+      magicComments.root = path.join(atom.project.getRootDirectory().getPath(), magicComments.root)

@@ -2,15 +2,14 @@
 
 fs = require 'fs'
 path = require 'path'
+extend = require 'extend'
 
-{CompositeDisposable} = require 'atom'
 ProcessManager = require './process-manager'
 Latexmk = require './latexmk'
 MagicComments = require './magic-comments'
 TeXliciousView = require './views/texlicious-view'
 
 class TeXlicious
-
   config:
     texPath:
       title: 'TeX Path'
@@ -42,6 +41,19 @@ class TeXlicious
       type: 'boolean'
       default: false
       order: 5
+    watchDelay:
+      title: 'Watch Delay'
+      description: 'Time in seconds to wait until compiling when in watch mode.'
+      type: 'integer'
+      default: 5
+      order: 6
+
+  constructor: ->
+    @editor = atom.workspace.getActiveTextEditor()
+    @processManager = new ProcessManager()
+    @latexmk = new Latexmk()
+    @magicComments = new MagicComments()
+    @texliciousView = new TeXliciousView({texlicious: @})
 
   activate: (state) ->
     atom.commands.add 'atom-text-editor',
@@ -52,12 +64,6 @@ class TeXlicious
     atom.workspace.addBottomPanel
       item: @texliciousView
 
-  constructor: ->
-    @processManager = new ProcessManager()
-    @latexmk = new Latexmk()
-    @magicComments = new MagicComments()
-    @texliciousView = new TeXliciousView()
-
   deactivate: ->
     @texliciousView.destroy()
 
@@ -65,59 +71,44 @@ class TeXlicious
   # serialize: ->
 
   getActiveFile: ->
-    editor = atom.workspace.getActivePaneItem()
-    filePath = editor?.getPath()
-    if filePath?
-      unless path.extname(filePath) is '.tex'
-        filePath = null
-      filePath
-
-  saveActiveFile: ->
-    editor = atom.workspace.getActivePaneItem()
-    editor.save()
-
-  handleEvents: () ->
-    @subscriptions = new CompositeDisposable
-    @subscriptions.add atom.workspace.observeTextEditors (editor) =>
-      buffer = editor.getBuffer()
-      bufferSavedSubscription = buffer.onDidSave =>
-        buffer.transact =>
-          scopeDescriptor = editor.getRootScopeDescriptor()
-          @compile(true)
-
-      editorDestroyedSubscription = editor.onDidDestroy ->
-        bufferSavedSubscription.dispose()
-        editorDestroyedSubscription.dispose()
-      bufferDestroyedSubscription = buffer.onDidDestroy ->
-        bufferDestroyedSubscription.dispose()
-        bufferSavedSubscription.dispose()
-
-      @subscriptions.add(bufferSavedSubscription)
-      @subscriptions.add(editorDestroyedSubscription)
-      @subscriptions.add(bufferDestroyedSubscription)
-
-  compile: (isWatching) ->
-    console.log "Compiling ..."
-
-    # Prevent infinite loop.
-    unless isWatching?
-      @saveActiveFile()
-
-    texFile = @getActiveFile()
-    unless texFile?
-      # TODO: Display message indicating a non-tex file tried to be compiled.
+    activeFile = @editor.getPath()
+    unless activeFile?
       return
 
-    magicComments = @magicComments.getMagicComments texFile
-    # TODO: Make this if block its own method.
-    # TODO: Implement 'program' magic comment.
-    if magicComments.root?
-      files = fs.readdirSync(atom.project.getRootDirectory().getPath()).forEach (file) ->
-        if magicComments.root == file
-          texFile = path.join(atom.project.getRootDirectory().getPath(),file)
-        else
-          # TODO: Notify the user that the file was not found.
-    args = @latexmk.args texFile
+    activeFile
+
+  isTexFile: ->
+    activeFile = @getActiveFile()
+    if activeFile?
+      unless path.extname(activeFile) is '.tex'
+        # TODO: Notify the user that the file is not a tex file.
+        console.log 'No tex file found.'
+        return false
+
+      @texFile = activeFile
+
+      return true
+
+  saveTexFile: ->
+    @editor.save()
+
+  makeArgs: ->
+    latexmkArgs = @latexmk.args @texFile
+    magicComments = @magicComments.getMagicComments @texFile
+    magicArgs = @magicComments.args magicComments
+    mergedArgs = extend(true, latexmkArgs, magicComments)
+    args = [mergedArgs.default, mergedArgs.program, mergedArgs.outdir, mergedArgs.root]
+
+    args
+
+  compile: ->
+    console.log "Compiling ..."
+    unless @isTexFile()
+      return
+
+    @saveTexFile()
+
+    args = @makeArgs()
     options = @processManager.options()
 
     @texliciousView.toggleCompileIndicator()
@@ -125,13 +116,12 @@ class TeXlicious
       @texliciousView.toggleCompileIndicator()
       switch exitCode
         when 0
-          console.log '... success.'
+          console.log '... done compiling.'
         else
-          console.log '... error.'
-          @texliciousView.showLog(texFile)
+          console.log '... error compiling.'
+          @texliciousView.showLog(@texFile)
 
   watch: ->
-    console.log "Watching ..."
-    @handleEvents()
+    @texliciousView.startWatching()
 
 module.exports = new TeXlicious()
