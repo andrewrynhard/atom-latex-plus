@@ -1,3 +1,0 @@
-'atom-text-editor':
-  'ctrl-alt-b': 'texlicious:build'
-  'ctrl-alt-w': 'texlicious:watch'

@@ -1,0 +1,12 @@
+'menu': [
+  {
+    label: 'Packages'
+    'submenu': [
+      label: 'TeXlicious'
+      'submenu': [
+        { label: 'Compile', command: 'texlicious:compile' },
+        { label: 'Watch', command: 'texlicious:watch' },
+      ]
+    ]
+  }
+]
