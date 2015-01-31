@@ -2,7 +2,7 @@
   "name": "texlicious",
   "main": "./lib/main",
   "version": "0.2.0",
-  "description": "A package that provides productivity tools for multiple flavors of TeX.",
+  "description": "Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.",
   "repository": "https://github.com/arynhard/atom-texlicious",
   "license": "MIT",
   "activationEvents": [
