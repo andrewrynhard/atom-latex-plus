@@ -5,6 +5,7 @@ LogView = require './log-view'
 
 module.exports =
 class TeXliciousView extends View
+
   initialize: (params) ->
     @editor = atom.workspace.getActiveTextEditor()
     @texlicious = params.texlicious
@@ -54,15 +55,24 @@ class TeXliciousView extends View
     else
       $('#watchButton').css('display','none')
 
+  stoppedChangingTimeout: null
+
+  cancelStoppedChangingTimeout: ->
+    clearTimeout(@stoppedChangingTimeout) if @stoppedChangingTimeout
+
+  scheduleWatchEvent: ->
+    @cancelStoppedChangingTimeout()
+    stoppedChangingCallback = =>
+      @stoppedChangingTimeout = null
+    @stoppedChangingTimeout = setTimeout(@texlicious.compile.bind(@texlicious), atom.config.get('texlicious.watchDelay') * 1000)
+
   startWatching: ->
     console.log 'Watching ...'
     @subscriptions = new CompositeDisposable
     @subscriptions.add atom.workspace.observeTextEditors (editor) =>
       buffer = editor.getBuffer()
-      buffer.stoppedChangingDelay = atom.config.get('texlicious.watchDelay') * 1000
-      bufferChangedSubscription = buffer.onDidStopChanging =>
-        buffer.transact =>
-          @texlicious.compile()
+      bufferChangedSubscription = buffer.onDidChange =>
+        @scheduleWatchEvent()
       @subscriptions.add(bufferChangedSubscription)
     @toggleWatchIndicator()
 
