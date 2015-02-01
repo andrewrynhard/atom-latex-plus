@@ -16,3 +16,10 @@
   * Improved magic comments. Now supports `program`.
   * Fixed changelog.
   * Added `Watch Delay` option to package settings.
+
+## 0.2.3
+  * Fix watch delay implementation. Previously the `watch` feature depended on
+    the buffer's `stoppedChangingDelay` value. Setting this explicitly was a
+    hack and effected other packages that might depend on this value. The new
+    implementation mimics `onDidStopChanging` and allows an adjustable delay
+    time.
