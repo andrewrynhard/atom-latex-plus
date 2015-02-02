@@ -97,6 +97,7 @@ class TeXlicious
     magicComments = @magicComments.getMagicComments @texFile
     magicArgs = @magicComments.args magicComments
     mergedArgs = extend(true, latexmkArgs, magicComments)
+    @logFile = path.basename mergedArgs.root
     args = [mergedArgs.default, mergedArgs.program, mergedArgs.outdir, mergedArgs.root]
 
     args
@@ -119,7 +120,7 @@ class TeXlicious
           console.log '... done compiling.'
         else
           console.log '... error compiling.'
-          @texliciousView.showLog(@texFile)
+          @texliciousView.showLog(@logFile)
 
   watch: ->
     @texliciousView.startWatching()
