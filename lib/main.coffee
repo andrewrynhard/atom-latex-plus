@@ -123,6 +123,7 @@ class TeXlicious
           @texliciousView.showLog(@logFile)
 
   watch: ->
+    @compile()
     @texliciousView.startWatching()
 
 module.exports = new TeXlicious()
