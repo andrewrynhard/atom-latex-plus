@@ -28,5 +28,8 @@
   * Fixed an error caused by the wrong log file name when using magic comments.
   * Changed keymaps that conflicted with Atom's keymaps.
 
-## 0.2.4
+## 0.2.5
   * Modified `watch` to run `compile` when invoked for the first time.
+
+## 0.2.6
+  * Fixed changelog.
