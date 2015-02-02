@@ -18,8 +18,12 @@
   * Added `Watch Delay` option to package settings.
 
 ## 0.2.3
-  * Fix watch delay implementation. Previously the `watch` feature depended on
+  * Fixed watch delay implementation. Previously the `watch` feature depended on
     the buffer's `stoppedChangingDelay` value. Setting this explicitly was a
     hack and effected other packages that might depend on this value. The new
     implementation mimics `onDidStopChanging` and allows an adjustable delay
     time.
+
+## 0.2.4
+  * Fixed an error caused by the wrong log file name when using magic comments.
+  * Changed keymaps that conflicted with Atom's keymaps.
