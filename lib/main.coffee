@@ -4,10 +4,13 @@ fs = require 'fs'
 path = require 'path'
 extend = require 'extend'
 
+{CompositeDisposable} = require 'atom'
+
 ProcessManager = require './process-manager'
 Latexmk = require './latexmk'
 MagicComments = require './magic-comments'
 TeXliciousView = require './views/texlicious-view'
+LogTool = require './log-parser'
 
 class TeXlicious
   config:
@@ -36,30 +39,38 @@ class TeXlicious
       type: 'string'
       default: ''
       order: 4
+    synctexEnabled:
+      title: 'Synctex'
+      type: 'boolean'
+      default: false
+      order: 5
     shellEscapeEnabled:
       title: 'Shell Escape'
       type: 'boolean'
       default: false
-      order: 5
+      order: 6
     watchDelay:
       title: 'Watch Delay'
       description: 'Time in seconds to wait until compiling when in watch mode.'
       type: 'integer'
       default: 5
-      order: 6
+      order: 7
 
   constructor: ->
-    @editor = atom.workspace.getActiveTextEditor()
     @processManager = new ProcessManager()
     @latexmk = new Latexmk()
     @magicComments = new MagicComments()
+    @logTool = new LogTool()
     @texliciousView = new TeXliciousView({texlicious: @})
+    @markers = []
 
   activate: (state) ->
     atom.commands.add 'atom-text-editor',
       'texlicious:compile': => @compile()
     atom.commands.add 'atom-text-editor',
       'texlicious:watch': => @watch()
+    atom.commands.add 'atom-text-editor',
+      'texlicious:stop': => @stop()
 
     atom.workspace.addBottomPanel
       item: @texliciousView
@@ -71,7 +82,8 @@ class TeXlicious
   # serialize: ->
 
   getActiveFile: ->
-    activeFile = @editor.getPath()
+    editor = atom.workspace.getActiveTextEditor()
+    activeFile = editor.getPath()
     unless activeFile?
       return
 
@@ -81,8 +93,7 @@ class TeXlicious
     activeFile = @getActiveFile()
     if activeFile?
       unless path.extname(activeFile) is '.tex'
-        # TODO: Notify the user that the file is not a tex file.
-        console.log 'No tex file found.'
+        atom.notifications.addInfo("The file \'" + path.basename activeFile + "\' is not a TeX file.")
         return false
 
       @texFile = activeFile
@@ -90,19 +101,46 @@ class TeXlicious
       return true
 
   saveTexFile: ->
-    @editor.save()
+    editor = atom.workspace.getActiveTextEditor()
+    editor.save()
 
   makeArgs: ->
+    args = []
+
     latexmkArgs = @latexmk.args @texFile
     magicComments = @magicComments.getMagicComments @texFile
     mergedArgs = extend(true, latexmkArgs, magicComments)
-    @logFile = path.basename mergedArgs.root
-    unless mergedArgs.program?
-      args = [mergedArgs.default, mergedArgs.outdir, mergedArgs.root]
-    else
-      args = [mergedArgs.default, mergedArgs.program, mergedArgs.outdir, mergedArgs.root]
+
+    @texFile = mergedArgs.root
+    @texliciousView.setTexFile @texFile
+
+    args.push mergedArgs.default
+    if mergedArgs.synctex?
+      args.push mergedArgs.synctex
+    if mergedArgs.program?
+      args.push mergedArgs.program
+    args.push mergedArgs.outdir
+    args.push mergedArgs.root
 
     args
+
+  updateGutters: (errors) ->
+    editor = atom.workspace.getActiveEditor()
+    buffer = editor.getBuffer()
+    activeFile = @getActiveFile()
+
+    if @markers.length
+      marker.destroy() for marker in @markers
+      @markers.length = 0
+
+    for line, file of errors
+      if file == path.basename activeFile
+        row = parseInt line - 1
+        column = buffer.lineLengthForRow(row)
+        range = [[row, 0], [row, column]]
+        marker = editor.markBufferRange(range, invalidate: 'touch')
+        @markers.push marker
+        decoration = editor.decorateMarker(marker, {type: 'gutter', class: 'gutter-red'})
 
   compile: ->
     console.log "Compiling ..."
@@ -122,10 +160,29 @@ class TeXlicious
           console.log '... done compiling.'
         else
           console.log '... error compiling.'
-          @texliciousView.showLog(@logFile)
+
+      errors = @logTool.parseLogFile(@texFile)
+      @updateGutters errors
+
+      @texliciousView.updateLog()
 
   watch: ->
-    @compile()
-    @texliciousView.startWatching()
+    if @texliciousView.watching
+      atom.notifications.addInfo("TeXlicious is already watching a file.")
+      return
+    else
+      @texliciousView.watching = true
+
+    @texPanel = atom.workspace.getActivePaneItem()
+    @texPanel.isWatching = true
+
+    @texliciousView.setWatchFile path.basename @getActiveFile()
+    @texliciousView.startWatchEvents()
+
+  stop: ->
+    if @texliciousView.watching
+      @texliciousView.stopWatching()
+    else
+      atom.notifications.addInfo("TeXlicious is not watching a file.")
 
 module.exports = new TeXlicious()
