@@ -95,10 +95,12 @@ class TeXlicious
   makeArgs: ->
     latexmkArgs = @latexmk.args @texFile
     magicComments = @magicComments.getMagicComments @texFile
-    magicArgs = @magicComments.args magicComments
     mergedArgs = extend(true, latexmkArgs, magicComments)
     @logFile = path.basename mergedArgs.root
-    args = [mergedArgs.default, mergedArgs.program, mergedArgs.outdir, mergedArgs.root]
+    unless mergedArgs.program?
+      args = [mergedArgs.default, mergedArgs.outdir, mergedArgs.root]
+    else
+      args = [mergedArgs.default, mergedArgs.program, mergedArgs.outdir, mergedArgs.root]
 
     args
 
