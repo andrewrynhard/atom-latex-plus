@@ -33,3 +33,9 @@
 
 ## 0.2.6
   * Fixed changelog.
+
+## 0.2.7
+  * Fixed atom engine semver.
+
+## 0.2.8
+  * Fixed issue with 'pdflatex' as the program used to compile tex files.
