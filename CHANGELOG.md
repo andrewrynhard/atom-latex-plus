@@ -38,4 +38,4 @@
   * Fixed atom engine semver.
 
 ## 0.2.8
-  * Fixed issue with 'pdflatex' as the program used to compile tex files.
+  * Fixed issue with `pdflatex` as the program used to compile tex files.
