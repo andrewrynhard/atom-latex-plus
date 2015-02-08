@@ -1,5 +1,5 @@
 {$, View} = require 'atom-space-pen-views'
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable,Disposable} = require 'atom'
 TeXlicious = require '../main'
 LogView = require './log-view'
 
@@ -9,6 +9,7 @@ class TeXliciousView extends View
   initialize: (params) ->
     @editor = atom.workspace.getActiveTextEditor()
     @texlicious = params.texlicious
+    @watching = false
 
   destroy: ->
     @close()
@@ -22,23 +23,32 @@ class TeXliciousView extends View
           @div class: 'pull-left', =>
             @button outlet: 'toggleLogButton', class:'btn panel-heading-btn', click: 'toggleLogView', 'Show Log'
           @div class: 'pull-left', =>
-            @button outlet: 'toggleWatchButton', class:'btn panel-heading-btn watch-btn', click: 'stopWatching', id: 'watchButton', ''
+            @span outlet: 'watchingTextIndicator', class:'watch-text', id: 'watchingText', ''
           @div class: 'panel-heading-center', =>
             @span class: 'spin-box', id: 'compileIndicator'
         @div class: 'panel-body', =>
           @subview 'logView', new LogView()
 
-  #TODO: Show the log file without having to error first.
-  showLog: (texFile) ->
-    @logView.updateLogView(texFile)
+  setTexFile: (texFile) ->
+    @texFile = texFile
+
+  setWatchFile: (watchFile) ->
+    @watchFile = watchFile
+
+  showLog: ->
+    @logView.updateLogView(@texFile)
     if $('#log-view-div').css('display') is 'none'
       @toggleLogView()
+
+  updateLog: ->
+    @logView.updateLogView(@texFile)
 
   toggleLogView: ->
     if $('#log-view-div').css('display') is 'block'
       $('#log-view-div').css('display','none')
       @toggleLogButton.text('Show Log')
     else
+      @updateLog()
       $('#log-view-div').css('display','block')
       @toggleLogButton.text('Hide Log')
 
@@ -49,16 +59,29 @@ class TeXliciousView extends View
       $('#compileIndicator').css('display','block')
 
   toggleWatchIndicator: ->
-    if $('#watchButton').css('display') is 'none'
-      $('#watchButton').css('display','block')
-      @toggleWatchButton.text('Stop Watching')
+    if $('#watchingText').css('display') is 'none'
+      $('#watchingText').css('display','block')
+      console.log atom
+      @watchingTextIndicator.text("Watching: #{@watchFile}")
     else
-      $('#watchButton').css('display','none')
+      $('#watchingText').css('display','none')
 
   stoppedChangingTimeout: null
 
   cancelStoppedChangingTimeout: ->
     clearTimeout(@stoppedChangingTimeout) if @stoppedChangingTimeout
+
+  startWatchEvents: ->
+    @toggleWatchIndicator()
+    @startWatching()
+
+    @watchEventsSubscription = new CompositeDisposable
+    @watchEventsSubscription.add atom.workspace.onDidChangeActivePaneItem =>
+      @texPanel = atom.workspace.getActivePaneItem()
+      unless @texPanel.isWatching
+        @pauseWatching()
+      else
+        @startWatching()
 
   scheduleWatchEvent: ->
     @cancelStoppedChangingTimeout()
@@ -68,16 +91,28 @@ class TeXliciousView extends View
 
   startWatching: ->
     console.log 'Watching ...'
-    @subscriptions = new CompositeDisposable
-    @subscriptions.add atom.workspace.observeTextEditors (editor) =>
+    @texlicious.compile()
+    @watchingSubscriptions = new CompositeDisposable
+    @watchingSubscriptions.add atom.workspace.observeTextEditors (editor) =>
       buffer = editor.getBuffer()
-      bufferChangedSubscription = buffer.onDidChange =>
+      @bufferChangedSubscription = buffer.onDidChange =>
         @scheduleWatchEvent()
-      @subscriptions.add(bufferChangedSubscription)
-    @toggleWatchIndicator()
+      @watchingSubscriptions .add(@bufferChangedSubscription)
+
+  pauseWatching: ->
+    console.log '... paused watching.'
+    if @watchingSubscriptions?
+      @watchingSubscriptions.dispose()
+      @watchingSubscriptions = null
 
   stopWatching: ->
     console.log '... stopped watching.'
-    @subscriptions.dispose()
-    @subscriptions = null
+    @watching = false
+    if @watchEventsSubscription?
+      @watchEventsSubscription.dispose()
+      @watchEventsSubscription = null
+    if @watchingSubscriptions?
+      @watchingSubscriptions.dispose()
+      @watchingSubscriptions = null
+
     @toggleWatchIndicator()
