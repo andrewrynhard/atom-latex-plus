@@ -25,6 +25,8 @@ class MagicComments
         return
       magicKey = line.match(magicCommentKeyPattern)
       magicValue = line.match(magicCommentValuePattern)
+      if magicKey[0] == 'root'
+        magicValue[1] = path.join(atom.project.getRootDirectory().getPath(), magicValue[1])
       magicComments[magicKey[0]] = magicValue[1]
 
     magicComments
