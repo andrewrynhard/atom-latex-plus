@@ -36,17 +36,22 @@ class TeXlicious
       type: 'string'
       default: ''
       order: 4
+    synctexEnabled:
+      title: 'Synctex'
+      type: 'boolean'
+      default: false
+      order: 5
     shellEscapeEnabled:
       title: 'Shell Escape'
       type: 'boolean'
       default: false
-      order: 5
+      order: 6
     watchDelay:
       title: 'Watch Delay'
       description: 'Time in seconds to wait until compiling when in watch mode.'
       type: 'integer'
       default: 5
-      order: 6
+      order: 7
 
   constructor: ->
     @editor = atom.workspace.getActiveTextEditor()
@@ -93,14 +98,20 @@ class TeXlicious
     @editor.save()
 
   makeArgs: ->
+    args = []
+
     latexmkArgs = @latexmk.args @texFile
     magicComments = @magicComments.getMagicComments @texFile
     mergedArgs = extend(true, latexmkArgs, magicComments)
     @logFile = path.basename mergedArgs.root
-    unless mergedArgs.program?
-      args = [mergedArgs.default, mergedArgs.outdir, mergedArgs.root]
-    else
-      args = [mergedArgs.default, mergedArgs.program, mergedArgs.outdir, mergedArgs.root]
+
+    args.push mergedArgs.default
+    if mergedArgs.synctex?
+      args.push mergedArgs.synctex
+    if mergedArgs.program?
+      args.push mergedArgs.program
+    args.push mergedArgs.outdir
+    args.push mergedArgs.root
 
     args
 
