@@ -86,8 +86,7 @@ class TeXlicious
     activeFile = @getActiveFile()
     if activeFile?
       unless path.extname(activeFile) is '.tex'
-        # TODO: Notify the user that the file is not a tex file.
-        console.log 'No tex file found.'
+        atom.notifications.addInfo("The file \'" + path.basename activeFile + "\' is not a TeX file.");
         return false
 
       @texFile = activeFile
