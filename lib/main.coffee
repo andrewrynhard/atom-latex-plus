@@ -147,8 +147,6 @@ class TeXlicious
     @texPanel = atom.workspace.getActivePaneItem()
     @texPanel.isWatching = true
 
-    @compile()
-    console.log @getActiveFile()
     @texliciousView.setWatchFile path.basename @getActiveFile()
     @texliciousView.startWatchEvents()
 
