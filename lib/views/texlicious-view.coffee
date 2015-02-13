@@ -34,6 +34,8 @@ class TeXliciousView extends View
 
   setWatchFile: (watchFile) ->
     @watchFile = watchFile
+  setWatchedPane: (pane) ->
+    @watchedPane = pane
 
   showLog: ->
     @logView.updateLogView(@texFile)
@@ -77,8 +79,8 @@ class TeXliciousView extends View
     @watchEventsSubscription = new CompositeDisposable
 
     @watchEventsSubscription.add atom.workspace.onDidChangeActivePaneItem =>
-      @texPanel = atom.workspace.getActivePaneItem()
-      unless @texPanel.isWatching
+      pane = atom.workspace.getActivePaneItem()
+      unless pane is @watchedPane && @watchedPane.isWatching
         @pauseWatching()
       else
         @startWatching()
@@ -108,9 +110,10 @@ class TeXliciousView extends View
       @watchingSubscriptions = null
 
   stopWatching: ->
+    console.log atom.workspace.getPanes()
     console.log '... stopped watching.'
     @watching = false
-    @texPanel.isWatching = false
+    @watchedPane.isWatching = false
     if @watchEventsSubscription?
       @watchEventsSubscription.dispose()
       @watchEventsSubscription = null
