@@ -23,7 +23,7 @@ class TeXliciousView extends View
           @div class: 'pull-left', =>
             @button outlet: 'toggleLogButton', class:'btn panel-heading-btn', click: 'toggleLogView', 'Show Log'
           @div class: 'pull-left', =>
-            @button outlet: 'toggleWatchButton', class:'btn panel-heading-btn watch-btn', click: 'stopWatching', id: 'watchButton', ''
+            @span outlet: 'watchingTextIndicator', class:'watch-text', id: 'watchingText', ''
           @div class: 'panel-heading-center', =>
             @span class: 'spin-box', id: 'compileIndicator'
         @div class: 'panel-body', =>
@@ -59,11 +59,12 @@ class TeXliciousView extends View
       $('#compileIndicator').css('display','block')
 
   toggleWatchIndicator: ->
-    if $('#watchButton').css('display') is 'none'
-      $('#watchButton').css('display','block')
-      @toggleWatchButton.text("Stop Watching #{@watchFile}")
+    if $('#watchingText').css('display') is 'none'
+      $('#watchingText').css('display','block')
+      console.log atom
+      @watchingTextIndicator.text("Watching: #{@watchFile}")
     else
-      $('#watchButton').css('display','none')
+      $('#watchingText').css('display','none')
 
   stoppedChangingTimeout: null
 
