@@ -102,7 +102,8 @@ class TeXlicious
     latexmkArgs = @latexmk.args @texFile
     magicComments = @magicComments.getMagicComments @texFile
     mergedArgs = extend(true, latexmkArgs, magicComments)
-    @logFile = path.basename mergedArgs.root
+
+    @texliciousView.setTexFile mergedArgs.root
 
     args.push mergedArgs.default
     if mergedArgs.synctex?
@@ -131,8 +132,9 @@ class TeXlicious
         when 0
           console.log '... done compiling.'
         else
+          # TODO: Highlight lines with errors in the gutter.
           console.log '... error compiling.'
-          @texliciousView.showLog(@logFile)
+      @texliciousView.updateLog()
 
   watch: ->
     @compile()

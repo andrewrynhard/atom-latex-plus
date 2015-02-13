@@ -28,17 +28,24 @@ class TeXliciousView extends View
         @div class: 'panel-body', =>
           @subview 'logView', new LogView()
 
+  setTexFile: (texFile) ->
+    @texFile = texFile
+
   #TODO: Show the log file without having to error first.
-  showLog: (texFile) ->
-    @logView.updateLogView(texFile)
+  showLog: ->
+    @logView.updateLogView(@texFile)
     if $('#log-view-div').css('display') is 'none'
       @toggleLogView()
+
+  updateLog: ->
+    @logView.updateLogView(@texFile)
 
   toggleLogView: ->
     if $('#log-view-div').css('display') is 'block'
       $('#log-view-div').css('display','none')
       @toggleLogButton.text('Show Log')
     else
+      @updateLog()
       $('#log-view-div').css('display','block')
       @toggleLogButton.text('Hide Log')
 
