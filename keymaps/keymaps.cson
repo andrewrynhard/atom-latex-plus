@@ -1,7 +1,9 @@
 '.platform-darwin atom-text-editor':
   'ctrl-cmd-c': 'texlicious:compile'
   'ctrl-cmd-w': 'texlicious:watch'
+  'ctrl-cmd-s': 'texlicious:stop'
 
 '.platform-win32 atom-text-editor':
   'ctrl-shift-C': 'texlicious:compile'
   'ctrl-shift-W': 'texlicious:watch'
+  'ctrl-shift-S': 'texlicious:watch'

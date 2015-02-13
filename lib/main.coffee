@@ -64,6 +64,8 @@ class TeXlicious
       'texlicious:compile': => @compile()
     atom.commands.add 'atom-text-editor',
       'texlicious:watch': => @watch()
+    atom.commands.add 'atom-text-editor',
+      'texlicious:stop': => @stop()
 
     atom.workspace.addBottomPanel
       item: @texliciousView
@@ -149,5 +151,11 @@ class TeXlicious
 
     @texliciousView.setWatchFile path.basename @getActiveFile()
     @texliciousView.startWatchEvents()
+
+  stop: ->
+    if @texliciousView.watching
+      @texliciousView.stopWatching()
+    else
+      atom.notifications.addInfo("TeXlicious is not watching a file.")
 
 module.exports = new TeXlicious()
