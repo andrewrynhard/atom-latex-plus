@@ -172,9 +172,9 @@ class TeXlicious
       return
     else
       @texliciousView.watching = true
-
-    @texPanel = atom.workspace.getActivePaneItem()
-    @texPanel.isWatching = true
+      texPanel = atom.workspace.getActivePaneItem()
+      texPanel.isWatching = true
+      @texliciousView.setWatchedPane texPanel
 
     @texliciousView.setWatchFile path.basename @getActiveFile()
     @texliciousView.startWatchEvents()
