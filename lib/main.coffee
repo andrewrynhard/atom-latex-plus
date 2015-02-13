@@ -168,7 +168,7 @@ class TeXlicious
 
   watch: ->
     if @texliciousView.watching
-      atom.notifications.addInfo("TeXlicious is already watching a file.")
+      atom.notifications.addInfo("You are already watching a file.")
       return
     else
       @texliciousView.watching = true
@@ -183,6 +183,6 @@ class TeXlicious
     if @texliciousView.watching
       @texliciousView.stopWatching()
     else
-      atom.notifications.addInfo("TeXlicious is not watching a file.")
+      atom.notifications.addInfo("You are not watching a file.")
 
 module.exports = new TeXlicious()
