@@ -90,6 +90,7 @@ class TeXliciousView extends View
 
   startWatching: ->
     console.log 'Watching ...'
+    @texlicious.compile()
     @watchingSubscriptions = new CompositeDisposable
     @watchingSubscriptions.add atom.workspace.observeTextEditors (editor) =>
       buffer = editor.getBuffer()
