@@ -4,10 +4,13 @@ fs = require 'fs'
 path = require 'path'
 extend = require 'extend'
 
+{CompositeDisposable} = require 'atom'
+
 ProcessManager = require './process-manager'
 Latexmk = require './latexmk'
 MagicComments = require './magic-comments'
 TeXliciousView = require './views/texlicious-view'
+LogTool = require './log-parser'
 
 class TeXlicious
   config:
@@ -57,7 +60,9 @@ class TeXlicious
     @processManager = new ProcessManager()
     @latexmk = new Latexmk()
     @magicComments = new MagicComments()
+    @logTool = new LogTool()
     @texliciousView = new TeXliciousView({texlicious: @})
+    @markers = []
 
   activate: (state) ->
     atom.commands.add 'atom-text-editor',
@@ -106,7 +111,8 @@ class TeXlicious
     magicComments = @magicComments.getMagicComments @texFile
     mergedArgs = extend(true, latexmkArgs, magicComments)
 
-    @texliciousView.setTexFile mergedArgs.root
+    @texFile = mergedArgs.root
+    @texliciousView.setTexFile @texFile
 
     args.push mergedArgs.default
     if mergedArgs.synctex?
@@ -117,6 +123,24 @@ class TeXlicious
     args.push mergedArgs.root
 
     args
+
+  updateGutters: (errors) ->
+    editor = atom.workspace.getActiveEditor()
+    buffer = editor.getBuffer()
+    activeFile = @getActiveFile()
+
+    if @markers.length
+      marker.destroy() for marker in @markers
+      @markers.length = 0
+
+    for line, file of errors
+      if file == path.basename activeFile
+        row = parseInt line - 1
+        column = buffer.lineLengthForRow(row)
+        range = [[row, 0], [row, column]]
+        marker = editor.markBufferRange(range, invalidate: 'touch')
+        @markers.push marker
+        decoration = editor.decorateMarker(marker, {type: 'gutter', class: 'gutter-red'})
 
   compile: ->
     console.log "Compiling ..."
@@ -135,8 +159,11 @@ class TeXlicious
         when 0
           console.log '... done compiling.'
         else
-          # TODO: Highlight lines with errors in the gutter.
           console.log '... error compiling.'
+
+      errors = @logTool.parseLogFile(@texFile)
+      @updateGutters errors
+
       @texliciousView.updateLog()
 
   watch: ->
