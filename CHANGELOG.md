@@ -39,3 +39,13 @@
 
 ## 0.2.8
   * Fixed issue with `pdflatex` as the program used to compile tex files.
+
+## 0.3.0
+  * Added error indication in gutter.
+  * Added `stop` command.
+  * Added user notifications.
+  * Improved the functionality of the `watch` command.
+  * Changed log button to refresh when showing.
+  * Changed synctex to optional.
+  * Fixed autosave.
+  * Various bug fixes.
