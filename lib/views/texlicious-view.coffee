@@ -1,5 +1,5 @@
 {$, View} = require 'atom-space-pen-views'
-{CompositeDisposable} = require 'atom'
+{CompositeDisposable,Disposable} = require 'atom'
 TeXlicious = require '../main'
 LogView = require './log-view'
 
@@ -9,6 +9,7 @@ class TeXliciousView extends View
   initialize: (params) ->
     @editor = atom.workspace.getActiveTextEditor()
     @texlicious = params.texlicious
+    @watching = false
 
   destroy: ->
     @close()
@@ -31,7 +32,9 @@ class TeXliciousView extends View
   setTexFile: (texFile) ->
     @texFile = texFile
 
-  #TODO: Show the log file without having to error first.
+  setWatchFile: (watchFile) ->
+    @watchFile = watchFile
+
   showLog: ->
     @logView.updateLogView(@texFile)
     if $('#log-view-div').css('display') is 'none'
@@ -58,7 +61,7 @@ class TeXliciousView extends View
   toggleWatchIndicator: ->
     if $('#watchButton').css('display') is 'none'
       $('#watchButton').css('display','block')
-      @toggleWatchButton.text('Stop Watching')
+      @toggleWatchButton.text("Stop Watching #{@watchFile}")
     else
       $('#watchButton').css('display','none')
 
@@ -66,6 +69,18 @@ class TeXliciousView extends View
 
   cancelStoppedChangingTimeout: ->
     clearTimeout(@stoppedChangingTimeout) if @stoppedChangingTimeout
+
+  startWatchEvents: ->
+    @toggleWatchIndicator()
+    @startWatching()
+
+    @watchEventsSubscription = new CompositeDisposable
+    @watchEventsSubscription.add atom.workspace.onDidChangeActivePaneItem =>
+      @texPanel = atom.workspace.getActivePaneItem()
+      unless @texPanel.isWatching
+        @pauseWatching()
+      else
+        @startWatching()
 
   scheduleWatchEvent: ->
     @cancelStoppedChangingTimeout()
@@ -75,16 +90,26 @@ class TeXliciousView extends View
 
   startWatching: ->
     console.log 'Watching ...'
-    @subscriptions = new CompositeDisposable
-    @subscriptions.add atom.workspace.observeTextEditors (editor) =>
+    @watchingSubscriptions = new CompositeDisposable
+    @watchingSubscriptions.add atom.workspace.observeTextEditors (editor) =>
       buffer = editor.getBuffer()
-      bufferChangedSubscription = buffer.onDidChange =>
+      @bufferChangedSubscription = buffer.onDidChange =>
         @scheduleWatchEvent()
-      @subscriptions.add(bufferChangedSubscription)
-    @toggleWatchIndicator()
+      @watchingSubscriptions .add(@bufferChangedSubscription)
+
+  pauseWatching: ->
+    console.log '... paused watching.'
+    @watchingSubscriptions.dispose()
+    @watchingSubscriptions = null
 
   stopWatching: ->
     console.log '... stopped watching.'
-    @subscriptions.dispose()
-    @subscriptions = null
+    @watching = false
+    if @watchEventsSubscription?
+      @watchEventsSubscription.dispose()
+      @watchEventsSubscription = null
+    if @watchingSubscriptions?
+      @watchingSubscriptions.dispose()
+      @watchingSubscriptions = null
+
     @toggleWatchIndicator()

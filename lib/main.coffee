@@ -54,7 +54,6 @@ class TeXlicious
       order: 7
 
   constructor: ->
-    @editor = atom.workspace.getActiveTextEditor()
     @processManager = new ProcessManager()
     @latexmk = new Latexmk()
     @magicComments = new MagicComments()
@@ -76,7 +75,8 @@ class TeXlicious
   # serialize: ->
 
   getActiveFile: ->
-    activeFile = @editor.getPath()
+    editor = atom.workspace.getActiveTextEditor()
+    activeFile = editor.getPath()
     unless activeFile?
       return
 
@@ -86,7 +86,7 @@ class TeXlicious
     activeFile = @getActiveFile()
     if activeFile?
       unless path.extname(activeFile) is '.tex'
-        atom.notifications.addInfo("The file \'" + path.basename activeFile + "\' is not a TeX file.");
+        atom.notifications.addInfo("The file \'" + path.basename activeFile + "\' is not a TeX file.")
         return false
 
       @texFile = activeFile
@@ -94,7 +94,8 @@ class TeXlicious
       return true
 
   saveTexFile: ->
-    @editor.save()
+    editor = atom.workspace.getActiveTextEditor()
+    editor.save()
 
   makeArgs: ->
     args = []
@@ -137,7 +138,18 @@ class TeXlicious
       @texliciousView.updateLog()
 
   watch: ->
+    if @texliciousView.watching
+      atom.notifications.addInfo("TeXlicious is already watching a file.")
+      return
+    else
+      @texliciousView.watching = true
+
+    @texPanel = atom.workspace.getActivePaneItem()
+    @texPanel.isWatching = true
+
     @compile()
-    @texliciousView.startWatching()
+    console.log @getActiveFile()
+    @texliciousView.setWatchFile path.basename @getActiveFile()
+    @texliciousView.startWatchEvents()
 
 module.exports = new TeXlicious()
