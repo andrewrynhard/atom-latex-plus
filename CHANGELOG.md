@@ -49,3 +49,6 @@
   * Changed synctex to optional.
   * Fixed autosave.
   * Various bug fixes.
+
+## 0.3.1
+  * Fixed bug in `stop` command.
