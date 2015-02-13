@@ -61,7 +61,6 @@ class TeXliciousView extends View
   toggleWatchIndicator: ->
     if $('#watchingText').css('display') is 'none'
       $('#watchingText').css('display','block')
-      console.log atom
       @watchingTextIndicator.text("Watching: #{@watchFile}")
     else
       $('#watchingText').css('display','none')
@@ -76,6 +75,7 @@ class TeXliciousView extends View
     @startWatching()
 
     @watchEventsSubscription = new CompositeDisposable
+
     @watchEventsSubscription.add atom.workspace.onDidChangeActivePaneItem =>
       @texPanel = atom.workspace.getActivePaneItem()
       unless @texPanel.isWatching
@@ -92,12 +92,14 @@ class TeXliciousView extends View
   startWatching: ->
     console.log 'Watching ...'
     @texlicious.compile()
+
     @watchingSubscriptions = new CompositeDisposable
+
     @watchingSubscriptions.add atom.workspace.observeTextEditors (editor) =>
       buffer = editor.getBuffer()
       @bufferChangedSubscription = buffer.onDidChange =>
         @scheduleWatchEvent()
-      @watchingSubscriptions .add(@bufferChangedSubscription)
+      @watchingSubscriptions.add(@bufferChangedSubscription)
 
   pauseWatching: ->
     console.log '... paused watching.'
@@ -108,6 +110,7 @@ class TeXliciousView extends View
   stopWatching: ->
     console.log '... stopped watching.'
     @watching = false
+    @texPanel.isWatching = false
     if @watchEventsSubscription?
       @watchEventsSubscription.dispose()
       @watchEventsSubscription = null
