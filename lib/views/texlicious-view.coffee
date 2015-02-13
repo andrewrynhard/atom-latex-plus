@@ -100,8 +100,9 @@ class TeXliciousView extends View
 
   pauseWatching: ->
     console.log '... paused watching.'
-    @watchingSubscriptions.dispose()
-    @watchingSubscriptions = null
+    if @watchingSubscriptions?
+      @watchingSubscriptions.dispose()
+      @watchingSubscriptions = null
 
   stopWatching: ->
     console.log '... stopped watching.'
