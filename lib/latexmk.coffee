@@ -8,8 +8,8 @@ class Latexmk
 
   make: (args, options, callback) ->
     latexmkpl = path.join(atom.packages.resolvePackagePath('texlicious'),'/vendor/latexmk.pl')
-    escapedArgs = (item.replace(' ', '\\ ') for item in args)
-    command = "#{latexmkpl} #{escapedArgs.join(' ')}"
+    command = "#{latexmkpl} #{args.join(' ')}"
+    console.log command
     proc = exec command, options, (error, stdout, stderr) ->
       if error?
         callback(error.code)
@@ -30,7 +30,7 @@ class Latexmk
     latexmkArgs.shellEscape = '-shell-escape' if shellEscapeEnabled
     latexmkArgs.synctex = '-synctex=1' if synctexEnabled
     latexmkArgs.program = "-#{program}" if program? and program isnt 'pdflatex'
-    latexmkArgs.outdir = "-outdir=#{path.join(atom.project.getRootDirectory().getPath(), outputDirectory)}" if outputDirectory?
-    latexmkArgs.root = "#{texFile}"
+    latexmkArgs.outdir = "-outdir=\'#{path.join(atom.project.getRootDirectory().getPath(), outputDirectory)}\'" if outputDirectory?
+    latexmkArgs.root = "\'#{texFile}\'"
 
     latexmkArgs

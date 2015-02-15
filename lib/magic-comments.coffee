@@ -26,7 +26,8 @@ class MagicComments
       magicKey = line.match(magicCommentKeyPattern)
       magicValue = line.match(magicCommentValuePattern)
       if magicKey[0] == 'root'
-        magicValue[1] = path.join(atom.project.getRootDirectory().getPath(), magicValue[1])
+        texFile = path.join(atom.project.getRootDirectory().getPath(), magicValue[1])
+        magicValue[1] = "\'#{texFile}\'"
       magicComments[magicKey[0]] = magicValue[1]
 
     magicComments
