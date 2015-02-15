@@ -1,3 +1,5 @@
+path = require 'path'
+
 {$, View} = require 'atom-space-pen-views'
 {CompositeDisposable,Disposable} = require 'atom'
 TeXlicious = require '../main'
@@ -7,7 +9,6 @@ module.exports =
 class TeXliciousView extends View
 
   initialize: (params) ->
-    @editor = atom.workspace.getActiveTextEditor()
     @texlicious = params.texlicious
     @watching = false
 
@@ -34,8 +35,6 @@ class TeXliciousView extends View
 
   setWatchFile: (watchFile) ->
     @watchFile = watchFile
-  setWatchedPane: (pane) ->
-    @watchedPane = pane
 
   showLog: ->
     @logView.updateLogView(@texFile)
@@ -63,7 +62,7 @@ class TeXliciousView extends View
   toggleWatchIndicator: ->
     if $('#watchingText').css('display') is 'none'
       $('#watchingText').css('display','block')
-      @watchingTextIndicator.text("Watching: #{@watchFile}")
+      @watchingTextIndicator.text("Watching: #{path.basename @texlicious.texFile}")
     else
       $('#watchingText').css('display','none')
 
@@ -73,14 +72,15 @@ class TeXliciousView extends View
     clearTimeout(@stoppedChangingTimeout) if @stoppedChangingTimeout
 
   startWatchEvents: ->
+    console.log @texlicious.texPanel
     @toggleWatchIndicator()
     @startWatching()
 
     @watchEventsSubscription = new CompositeDisposable
 
     @watchEventsSubscription.add atom.workspace.onDidChangeActivePaneItem =>
-      pane = atom.workspace.getActivePaneItem()
-      unless pane is @watchedPane && @watchedPane.isWatching
+      panel = atom.workspace.getActivePaneItem()
+      unless panel is @texlicious.texPanel and @texlicious.texPanel.watching
         @pauseWatching()
       else
         @startWatching()
@@ -97,23 +97,22 @@ class TeXliciousView extends View
 
     @watchingSubscriptions = new CompositeDisposable
 
-    @watchingSubscriptions.add atom.workspace.observeTextEditors (editor) =>
-      buffer = editor.getBuffer()
-      @bufferChangedSubscription = buffer.onDidChange =>
-        @scheduleWatchEvent()
-      @watchingSubscriptions.add(@bufferChangedSubscription)
+    @bufferChangedSubscription = @texlicious.buffer.onDidChange =>
+      @scheduleWatchEvent()
+
+    @watchingSubscriptions.add(@bufferChangedSubscription)
 
   pauseWatching: ->
-    console.log '... paused watching.'
     if @watchingSubscriptions?
       @watchingSubscriptions.dispose()
       @watchingSubscriptions = null
+      console.log '... paused watching.'
 
   stopWatching: ->
     console.log atom.workspace.getPanes()
     console.log '... stopped watching.'
+    @texlicious.texPanel.watching = false
     @watching = false
-    @watchedPane.isWatching = false
     if @watchEventsSubscription?
       @watchEventsSubscription.dispose()
       @watchEventsSubscription = null
