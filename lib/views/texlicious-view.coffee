@@ -72,7 +72,6 @@ class TeXliciousView extends View
     clearTimeout(@stoppedChangingTimeout) if @stoppedChangingTimeout
 
   startWatchEvents: ->
-    console.log @texlicious.texPanel
     @toggleWatchIndicator()
     @startWatching()
 
@@ -109,7 +108,6 @@ class TeXliciousView extends View
       console.log '... paused watching.'
 
   stopWatching: ->
-    console.log atom.workspace.getPanes()
     console.log '... stopped watching.'
     @texlicious.texPanel.watching = false
     @watching = false
