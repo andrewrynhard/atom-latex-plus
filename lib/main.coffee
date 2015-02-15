@@ -66,9 +66,15 @@ class TeXlicious
 
   activate: (state) ->
     atom.commands.add 'atom-text-editor',
-      'texlicious:compile': => @compile()
+      'texlicious:compile': =>
+        @setTexPanel()
+        @compile()
+
     atom.commands.add 'atom-text-editor',
-      'texlicious:watch': => @watch()
+      'texlicious:watch': =>
+        @setTexPanel()
+        @watch()
+
     atom.commands.add 'atom-text-editor',
       'texlicious:stop': => @stop()
 
@@ -81,34 +87,46 @@ class TeXlicious
   # TODO: See: https://atom.io/docs/v0.176.0/advanced/serialization.
   # serialize: ->
 
-  getActiveFile: ->
-    editor = atom.workspace.getActiveTextEditor()
-    activeFile = editor.getPath()
-    unless activeFile?
+  # getActiveFile: ->
+  #   @editor = atom.workspace.getActiveTextEditor()
+  #   activeFile = editor.getPath()
+  #   unless activeFile?
+  #     return
+  #
+  #   activeFile
+  #
+  # isTexFile: ->
+  #   activeFile = @getActiveFile()
+  #   if activeFile?
+  #     unless path.extname(activeFile) is '.tex'
+  #       atom.notifications.addInfo("The file \'" + path.basename activeFile + "\' is not a TeX file.")
+  #       return false
+  #
+  #     @texFile = activeFile
+  #
+  #     return true
+
+  setTexPanel: ->
+    @editor = atom.workspace.getActiveTextEditor()
+    @activeFile = @editor.getPath()
+    unless @activeFile?
       return
 
-    activeFile
+    unless path.extname(@activeFile) is '.tex'
+      atom.notifications.addInfo("The file \'" + path.basename activeFile + "\' is not a TeX file.")
+      return
 
-  isTexFile: ->
-    activeFile = @getActiveFile()
-    if activeFile?
-      unless path.extname(activeFile) is '.tex'
-        atom.notifications.addInfo("The file \'" + path.basename activeFile + "\' is not a TeX file.")
-        return false
-
-      @texFile = activeFile
-
-      return true
+    @texPanel = atom.workspace.getActivePaneItem()
+    @buffer = @editor.getBuffer()
 
   saveTexFile: ->
-    editor = atom.workspace.getActiveTextEditor()
-    editor.save()
+    @editor.save()
 
   makeArgs: ->
     args = []
 
-    latexmkArgs = @latexmk.args @texFile
-    magicComments = @magicComments.getMagicComments @texFile
+    latexmkArgs = @latexmk.args @activeFile
+    magicComments = @magicComments.getMagicComments @activeFile
     mergedArgs = extend(true, latexmkArgs, magicComments)
 
     @texFile = mergedArgs.root
@@ -125,27 +143,21 @@ class TeXlicious
     args
 
   updateGutters: (errors) ->
-    editor = atom.workspace.getActiveEditor()
-    buffer = editor.getBuffer()
-    activeFile = @getActiveFile()
-
     if @markers.length
       marker.destroy() for marker in @markers
       @markers.length = 0
 
     for line, file of errors
-      if file == path.basename activeFile
+      if file == path.basename @texFile
         row = parseInt line - 1
-        column = buffer.lineLengthForRow(row)
+        column = @buffer.lineLengthForRow(row)
         range = [[row, 0], [row, column]]
-        marker = editor.markBufferRange(range, invalidate: 'touch')
+        marker = @editor.markBufferRange(range, invalidate: 'touch')
         @markers.push marker
-        decoration = editor.decorateMarker(marker, {type: 'gutter', class: 'gutter-red'})
+        decoration = @editor.decorateMarker(marker, {type: 'gutter', class: 'gutter-red'})
 
   compile: ->
     console.log "Compiling ..."
-    unless @isTexFile()
-      return
 
     @saveTexFile()
 
@@ -171,12 +183,9 @@ class TeXlicious
       atom.notifications.addInfo("You are already watching a file.")
       return
     else
+      @texPanel.watching = true
       @texliciousView.watching = true
-      texPanel = atom.workspace.getActivePaneItem()
-      texPanel.isWatching = true
-      @texliciousView.setWatchedPane texPanel
 
-    @texliciousView.setWatchFile path.basename @getActiveFile()
     @texliciousView.startWatchEvents()
 
   stop: ->

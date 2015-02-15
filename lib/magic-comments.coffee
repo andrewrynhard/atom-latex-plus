@@ -18,16 +18,24 @@ class MagicComments
 
   getMagicComments: (texFile) ->
     magicComments = []
+    console.log texFile
 
-    fs.readFileSync(texFile).toString().split('\n').forEach (line) ->
-      magicLine = line.match(magicCommentPattern)
-      unless magicLine?
-        return
-      magicKey = line.match(magicCommentKeyPattern)
-      magicValue = line.match(magicCommentValuePattern)
-      if magicKey[0] == 'root'
-        texFile = path.join(atom.project.getRootDirectory().getPath(), magicValue[1])
-        magicValue[1] = "\'#{texFile}\'"
-      magicComments[magicKey[0]] = magicValue[1]
+    try
+      fs.readFileSync(texFile).toString().split('\n').forEach (line) ->
+        magicLine = line.match(magicCommentPattern)
+        unless magicLine?
+          return
+        magicKey = line.match(magicCommentKeyPattern)
+        magicValue = line.match(magicCommentValuePattern)
+        if magicKey[0] == 'root'
+          texFile = path.join(atom.project.getRootDirectory().getPath(), magicValue[1])
+          magicValue[1] = "\'#{texFile}\'"
+        magicComments[magicKey[0]] = magicValue[1]
+    catch e
+      if e.code is 'ENOENT'
+        atom.notifications.addError(e.toString(), dismissable: true)
+      else
+        atom.notifications.addError(e.toString(), dismissable: true)
+        throw (e)
 
     magicComments
