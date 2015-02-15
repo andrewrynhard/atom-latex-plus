@@ -59,6 +59,9 @@
 ## 0.3.3
   * Fixed a bug caused by whitespace in the project path.
 
-## 0.3.3
+## 0.3.4
   * Improved `watch` feature. `watch` no longer fails on compile when the active
     file is not the watched file.
+
+## 0.3.5
+  * Fixed changelog.
