@@ -62,7 +62,7 @@ class TeXliciousView extends View
   toggleWatchIndicator: ->
     if $('#watchingText').css('display') is 'none'
       $('#watchingText').css('display','block')
-      @watchingTextIndicator.text("Watching: #{path.basename @texlicious.texFile}")
+      @watchingTextIndicator.text("Watching: #{path.basename @texlicious.activeFile}")
     else
       $('#watchingText').css('display','none')
 
