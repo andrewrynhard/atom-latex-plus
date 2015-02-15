@@ -18,7 +18,6 @@ class MagicComments
 
   getMagicComments: (texFile) ->
     magicComments = []
-    console.log texFile
 
     try
       fs.readFileSync(texFile).toString().split('\n').forEach (line) ->

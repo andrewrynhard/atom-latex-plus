@@ -9,7 +9,6 @@ class Latexmk
   make: (args, options, callback) ->
     latexmkpl = path.join(atom.packages.resolvePackagePath('texlicious'),'/vendor/latexmk.pl')
     command = "#{latexmkpl} #{args.join(' ')}"
-    console.log command
     proc = exec command, options, (error, stdout, stderr) ->
       if error?
         callback(error.code)
