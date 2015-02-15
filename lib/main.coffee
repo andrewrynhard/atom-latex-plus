@@ -148,7 +148,7 @@ class TeXlicious
       @markers.length = 0
 
     for line, file of errors
-      if file == path.basename @texFile
+      if file == path.basename @activeFile
         row = parseInt line - 1
         column = @buffer.lineLengthForRow(row)
         range = [[row, 0], [row, column]]
