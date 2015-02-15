@@ -10,7 +10,7 @@ ProcessManager = require './process-manager'
 Latexmk = require './latexmk'
 MagicComments = require './magic-comments'
 TeXliciousView = require './views/texlicious-view'
-LogTool = require './log-parser'
+LogTool = require './log-tool'
 
 class TeXlicious
   config:
