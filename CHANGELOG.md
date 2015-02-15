@@ -62,4 +62,3 @@
 ## 0.3.3
   * Improved `watch` feature. `watch` no longer fails on compile when the active
     file is not the watched file.
-  * Fixed undefined reference to the watched file.
