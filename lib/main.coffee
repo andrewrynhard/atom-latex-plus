@@ -221,12 +221,12 @@ class TeXlicious
         when 0
           console.log '... done compiling.'
           marker.destroy() for marker in @errorMarkers
-          @errorMarkers.length = 0
+          @errors.length = 0
         else
           console.log '... error compiling.'
           @errors = @logTool.getErrors(@texFile)
-          @updateGutters()
 
+      @updateGutters()
       @mainView.updateErrorView()
 
   watch: ->
