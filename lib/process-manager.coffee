@@ -4,7 +4,7 @@ class ProcessManager
   constructor: ->
     @PATH = switch process.platform
       when 'win32'
-        process.env[Path]
+        process.env.Path
       when 'darwin'
         process.env.PATH
 
