@@ -5,8 +5,8 @@ errorLinePattern = ///
   ^l\.(\d*)
   ///
 
-errorFileLinePattern = ///
-  ^\.\/(.*\.tex):(\d*)
+errorFileLineMessagePattern = ///
+  ^\.\/(.*\.tex):(\d*):\s(.*)
   ///
 
 module.exports =
@@ -30,23 +30,25 @@ class LogTool
 
     logContents
 
-  parseLogFile: (texFile) ->
+  getErrors: (texFile) ->
     console.log "Parsing log file ..."
 
     errors = []
 
     logFile = @resolveLogFile(texFile)
     fs.readFileSync(logFile).toString().split('\n').forEach (line) ->
-      logErrorLine = line.match(errorFileLinePattern)
+      logErrorLine = line.match(errorFileLineMessagePattern)
 
       unless logErrorLine?
         return
 
-      errorInfo = line.match(errorFileLinePattern)
-      errorFile = errorInfo[1]
-      errorLine = errorInfo[2]
+      errorInfo = line.match(errorFileLineMessagePattern)
+      error = {
+        file:     errorInfo[1]
+        line:     errorInfo[2]
+        message:  errorInfo[3]
+      }
 
-      unless errors[errorLine]?
-        errors[errorLine] = errorFile
+      errors.push error
 
     errors
