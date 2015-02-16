@@ -80,6 +80,9 @@ class TeXlicious
         unless @isTex()
           return
 
+        unless @mainPanel.isVisible()
+          @mainPanel.show()
+
         @setTex()
         @compile()
 
@@ -88,14 +91,18 @@ class TeXlicious
         unless @isTex()
           return
 
+        unless @mainPanel.isVisible()
+          @mainPanel.show()
+
         @setTex()
         @watch()
 
     atom.commands.add 'atom-text-editor',
       'texlicious:stop': => @stop()
 
-    atom.workspace.addBottomPanel
+    @mainPanel = atom.workspace.addBottomPanel
       item: @mainView
+      visible: false
 
   deactivate: ->
     @mainView.destroy()
