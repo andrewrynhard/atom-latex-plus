@@ -1,12 +1,8 @@
 fs = require 'fs'
 path = require 'path'
 
-errorLinePattern = ///
-  ^l\.(\d*)
-  ///
-
 errorFileLineMessagePattern = ///
-  ^\.\/(.*\.tex):(\d*):\s(.*)
+  ^(\.\/|[A-D:])(.*\.tex):(\d*):\s(.*)
   ///
 
 module.exports =
@@ -45,11 +41,12 @@ class LogTool
 
       errorInfo = line.match(errorFileLineMessagePattern)
       error = {
-        file:     errorInfo[1]
-        line:     errorInfo[2]
-        message:  errorInfo[3]
+        file:     errorInfo[2]
+        line:     errorInfo[3]
+        message:  errorInfo[4]
       }
-
+      console.log errorInfo
+      console.log error
       errors.push error
 
     errors
