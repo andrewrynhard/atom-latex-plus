@@ -70,8 +70,8 @@ class TeXlicious
     # Globals (set them explicitly for readability)
     @texEditor = null
     @texFile = null
-    @errorMarkers = []
-    @errors = null
+    @errorMarkers = [] # TODO: Make this a composite disposable.
+    @errors = []
     @watching = false
 
   activate: (state) ->
@@ -196,11 +196,6 @@ class TeXlicious
   updateGutters: ->
     editors =  @getEditors()
 
-    # TODO: Make this a composite disposable.
-    if @errorMarkers.length
-      marker.destroy() for marker in @errorMarkers
-      @errorMarkers.length = 0
-
     for error in @errors
       for editor in editors
         if error.file == path.basename editor.getPath()
@@ -225,12 +220,13 @@ class TeXlicious
       switch exitCode
         when 0
           console.log '... done compiling.'
+          marker.destroy() for marker in @errorMarkers
+          @errorMarkers.length = 0
         else
           console.log '... error compiling.'
+          @errors = @logTool.getErrors(@texFile)
+          @updateGutters()
 
-      @errors = @logTool.getErrors(@texFile)
-
-      @updateGutters()
       @mainView.updateErrorView()
 
   watch: ->
