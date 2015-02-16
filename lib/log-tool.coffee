@@ -35,6 +35,7 @@ class LogTool
 
     errors = []
 
+    #TODO: Try - Catch.
     logFile = @resolveLogFile(texFile)
     fs.readFileSync(logFile).toString().split('\n').forEach (line) ->
       logErrorLine = line.match(errorFileLineMessagePattern)

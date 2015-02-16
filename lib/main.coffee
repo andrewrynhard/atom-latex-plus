@@ -105,7 +105,7 @@ class TeXlicious
       visible: false
 
   deactivate: ->
-    @mainView.destroy()
+    @mainPanel.destroy()
 
   # TODO: See: https://atom.io/docs/v0.176.0/advanced/serialization.
   # serialize: ->
