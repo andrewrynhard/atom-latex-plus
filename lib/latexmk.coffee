@@ -11,6 +11,7 @@ class Latexmk
     command = "perl #{latexmkpl} #{args.join(' ')}"
     proc = exec command, options, (error, stdout, stderr) ->
       if error?
+        console.log error.message
         callback(error.code)
       else
         callback(0)

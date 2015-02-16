@@ -4,19 +4,21 @@ class ProcessManager
   constructor: ->
     @PATH = switch process.platform
       when 'win32'
+        texbin = 'C:\\miktex\\bin'
         process.env.Path
       when 'darwin'
+        texbin = '/usr/texbin'
         process.env.PATH
 
-    #TODO: Resolve texbin path.
-    @texPath = atom.config.get('texlicious.texPath') ? '/usr/texbin'
+    #TODO: Resolve texbin path automatically.
+    @texPath = atom.config.get('texlicious.texPath') ? texbin
     #TODO: Get the users TEXINPUTS if they are defined in process.env.
     @texInputs = atom.config.get('texlicious.texInputs') ? ''
 
   options: () ->
     environment = process.env
     environment.PATH =  @PATH + ':' + @texPath + ':'
-    environment.TEXINPUTS = @texInputs + '//:' if @texInputs?
+    environment.TEXINPUTS = @texInputs + '//:' if @texInputs isnt ''
     environment.timeout = 60000
 
     environment
