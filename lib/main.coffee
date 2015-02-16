@@ -186,7 +186,8 @@ class TeXlicious
       args.push mergedArgs.synctex
     if mergedArgs.program?
       args.push mergedArgs.program
-    args.push mergedArgs.outdir
+    if mergedArgs.outdir?
+      args.push mergedArgs.outdir
     args.push mergedArgs.root
 
     args
