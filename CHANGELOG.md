@@ -65,3 +65,13 @@
 
 ## 0.3.5
   * Fixed changelog.
+  Optimize code
+
+## 0.3.6
+  * Optimized code.
+  * Watch now switches files instead of prompting to stop first.
+  * Errors are now displayed with a message.
+  * Gutters are now updated across all currently opened editors.
+  * Code was modified to be more modular.
+  * Removed log view in favor of displaying errors. A future release will
+    provide a keymapping that will open the log file upon invoking.
