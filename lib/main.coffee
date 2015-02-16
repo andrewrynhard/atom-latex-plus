@@ -198,7 +198,8 @@ class TeXlicious
 
     for error in @errors
       for editor in editors
-        if error.file == path.basename editor.getPath()
+        errorFile = path.basename error.file
+        if errorFile == path.basename editor.getPath()
           row = parseInt error.line - 1
           column = editor.buffer.lineLengthForRow(row)
           range = [[row, 0], [row, column]]

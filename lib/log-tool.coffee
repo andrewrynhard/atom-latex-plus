@@ -45,8 +45,7 @@ class LogTool
         line:     errorInfo[3]
         message:  errorInfo[4]
       }
-      console.log errorInfo
-      console.log error
+
       errors.push error
 
     errors
