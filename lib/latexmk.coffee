@@ -29,7 +29,7 @@ class Latexmk
     latexmkArgs.shellEscape = '-shell-escape' if shellEscapeEnabled
     latexmkArgs.synctex = '-synctex=1' if synctexEnabled
     latexmkArgs.program = "-#{program}" if program? and program isnt 'pdflatex'
-    latexmkArgs.outdir = "-outdir=\'#{path.join(atom.project.getRootDirectory().getPath(), outputDirectory)}\'" if outputDirectory isnt ''
-    latexmkArgs.root = "\'#{texFile}\'"
+    latexmkArgs.outdir = "-outdir=\"#{path.join(atom.project.getRootDirectory().getPath(), outputDirectory)}\"" if outputDirectory isnt ''
+    latexmkArgs.root = "\"#{texFile}\""
 
     latexmkArgs

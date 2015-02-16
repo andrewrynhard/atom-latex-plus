@@ -28,7 +28,7 @@ class MagicComments
         magicValue = line.match(magicCommentValuePattern)
         if magicKey[0] == 'root'
           texFile = path.join(atom.project.getRootDirectory().getPath(), magicValue[1])
-          magicValue[1] = "\'#{texFile}\'"
+          magicValue[1] = "\"#{texFile}\""
         magicComments[magicKey[0]] = magicValue[1]
     catch e
       if e.code is 'ENOENT'

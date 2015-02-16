@@ -8,6 +8,7 @@ class ProcessManager
       when 'darwin'
         process.env.PATH
 
+    #TODO: Resolve texbin path.
     @texPath = atom.config.get('texlicious.texPath') ? '/usr/texbin'
     #TODO: Get the users TEXINPUTS if they are defined in process.env.
     @texInputs = atom.config.get('texlicious.texInputs') ? ''
