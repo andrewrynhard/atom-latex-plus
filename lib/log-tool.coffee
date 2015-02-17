@@ -32,20 +32,28 @@ class LogTool
     errors = []
 
     #TODO: Try - Catch.
-    logFile = @resolveLogFile(texFile)
-    fs.readFileSync(logFile).toString().split('\n').forEach (line) ->
-      logErrorLine = line.match(errorFileLineMessagePattern)
+    try
+      logFile = @resolveLogFile(texFile)
+      fs.readFileSync(logFile).toString().split('\n').forEach (line) ->
+        logErrorLine = line.match(errorFileLineMessagePattern)
 
-      unless logErrorLine?
-        return
+        unless logErrorLine?
+          return
 
-      errorInfo = line.match(errorFileLineMessagePattern)
-      error = {
-        file:     errorInfo[2]
-        line:     errorInfo[3]
-        message:  errorInfo[4]
-      }
+        errorInfo = line.match(errorFileLineMessagePattern)
+        error = {
+          file:     errorInfo[2]
+          line:     errorInfo[3]
+          message:  errorInfo[4]
+        }
 
-      errors.push error
+        errors.push error
+
+    catch e
+      if e.code is 'ENOENT'
+        atom.notifications.addError(e.toString(), dismissable: true)
+      else
+        atom.notifications.addError(e.toString(), dismissable: true)
+        throw (e)
 
     errors
