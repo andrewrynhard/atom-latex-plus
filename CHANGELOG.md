@@ -79,5 +79,8 @@
 ## 0.3.7
   * Fixed Windows crossplatform compatibility.
 
-## 0.3.7
+## 0.3.8
+  * Fixed Linux crossplatform compatibility.
+
+## 0.3.9
   * Fixed Linux crossplatform compatibility.
