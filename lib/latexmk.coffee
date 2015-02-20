@@ -11,6 +11,7 @@ class Latexmk
     command = "perl \"#{latexmkpl}\" #{args.join(' ')}"
     proc = exec command, options, (error, stdout, stderr) ->
       if error?
+        atom.notifications.addError(error.toString(), dismissable: true)
         callback(error.code)
       else
         callback(0)
