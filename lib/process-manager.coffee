@@ -9,6 +9,9 @@ class ProcessManager
       when 'darwin'
         texbin = '/usr/texbin'
         process.env.PATH
+      when 'linux'
+        texbin = '/usr/texbin'
+        process.env.PATH
 
     #TODO: Resolve texbin path automatically.
     @texPath = atom.config.get('texlicious.texPath') ? texbin
