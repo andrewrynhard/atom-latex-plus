@@ -1,3 +1,4 @@
+#TODO: Add and option that allows relative paths for PDF output.
 fs = require 'fs'
 path = require 'path'
 
