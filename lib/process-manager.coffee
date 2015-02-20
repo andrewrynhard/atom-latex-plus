@@ -3,15 +3,15 @@ class ProcessManager
 
   constructor: ->
     @PATH = switch process.platform
-      when 'win32'
-        texbin = 'C:\\miktex\\bin'
-        process.env.Path
       when 'darwin'
         texbin = '/usr/texbin'
         process.env.PATH
       when 'linux'
         texbin = '/usr/texbin'
         process.env.PATH
+      when 'win32'
+        texbin = 'C:\\miktex\\bin'
+        process.env.Path
 
     #TODO: Resolve texbin path automatically.
     @texPath = atom.config.get('texlicious.texPath') ? texbin
