@@ -76,5 +76,8 @@
   * Removed log view in favor of displaying errors. A future release will
     provide a keymapping that will open the log file upon invoking.
 
-## 0.3.6
-  * Fixed crossplatform compatibility.
+## 0.3.7
+  * Fixed Windows crossplatform compatibility.
+
+## 0.3.7
+  * Fixed Linux crossplatform compatibility.
