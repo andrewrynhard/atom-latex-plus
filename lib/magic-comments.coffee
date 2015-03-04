@@ -16,11 +16,14 @@ magicCommentValuePattern = ///
 
 module.exports =
 class MagicComments
+  constructor: (params) ->
+    @texliciousCore = params.texliciousCore
 
   getMagicComments: (texFile) ->
     magicComments = []
 
     try
+      texProjectRoot = @texliciousCore.getTexProjectRoot()
       fs.readFileSync(texFile).toString().split('\n').forEach (line) ->
         magicLine = line.match(magicCommentPattern)
         unless magicLine?
@@ -28,7 +31,7 @@ class MagicComments
         magicKey = line.match(magicCommentKeyPattern)
         magicValue = line.match(magicCommentValuePattern)
         if magicKey[0] == 'root'
-          texFile = path.join(atom.project.getRootDirectory().getPath(), magicValue[1])
+          texFile = path.join(texProjectRoot, magicValue[1])
           magicValue[1] = "\"#{texFile}\""
         magicComments[magicKey[0]] = magicValue[1]
     catch e

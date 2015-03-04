@@ -4,14 +4,15 @@ path = require 'path'
 
 module.exports =
 class Latexmk
-  constructor: ->
+  constructor: (params) ->
+    @texliciousCore = params.texliciousCore
 
   make: (args, options, callback) ->
     latexmkpl = path.join(atom.packages.resolvePackagePath('texlicious'),'/vendor/latexmk.pl')
     command = "perl \"#{latexmkpl}\" #{args.join(' ')}"
     proc = exec command, options, (error, stdout, stderr) ->
       if error?
-        atom.notifications.addError(error.toString(), dismissable: true)
+        console.trace error
         callback(error.code)
       else
         callback(0)
@@ -22,15 +23,17 @@ class Latexmk
       default: '-interaction=nonstopmode -f -cd -pdf -file-line-error'
     }
 
+    bibtexEnabled = atom.config.get('texlicious.bibtexEnabled')
     shellEscapeEnabled = atom.config.get('texlicious.shellEscapeEnabled')
     synctexEnabled = atom.config.get('texlicious.synctexEnabled')
     program = atom.config.get('texlicious.texFlavor')
     outputDirectory = atom.config.get('texlicious.outputDirectory')
 
+    latexmkArgs.shellEscape = '-bibtex' if bibtexEnabled
     latexmkArgs.shellEscape = '-shell-escape' if shellEscapeEnabled
     latexmkArgs.synctex = '-synctex=1' if synctexEnabled
     latexmkArgs.program = "-#{program}" if program? and program isnt 'pdflatex'
-    latexmkArgs.outdir = "-outdir=\"#{path.join(atom.project.getRootDirectory().getPath(), outputDirectory)}\"" if outputDirectory isnt ''
+    latexmkArgs.outdir = "-outdir=\"#{path.join(@texliciousCore.getTexProjectRoot(), outputDirectory)}\"" if outputDirectory isnt ''
     latexmkArgs.root = "\"#{texFile}\""
 
     latexmkArgs

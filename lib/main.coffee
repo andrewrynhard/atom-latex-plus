@@ -40,29 +40,34 @@ class TeXlicious
       type: 'string'
       default: ''
       order: 4
-    synctexEnabled:
-      title: 'Synctex'
+    bibtexEnabled:
+      title: 'Enable BibTeX'
       type: 'boolean'
       default: false
       order: 5
-    shellEscapeEnabled:
-      title: 'Shell Escape'
+    synctexEnabled:
+      title: 'Enable Synctex'
       type: 'boolean'
       default: false
       order: 6
+    shellEscapeEnabled:
+      title: 'Enable Shell Escape'
+      type: 'boolean'
+      default: false
+      order: 7
     watchDelay:
       title: 'Watch Delay'
       description: 'Time in seconds to wait until compiling when in watch mode.'
       type: 'integer'
       default: 5
-      order: 7
+      order: 8
 
   constructor: ->
     # Helpers
     @processManager = new ProcessManager()
-    @latexmk = new Latexmk()
-    @magicComments = new MagicComments()
-    @logTool = new LogTool()
+    @latexmk = new Latexmk({texliciousCore: @})
+    @magicComments = new MagicComments({texliciousCore: @})
+    @logTool = new LogTool({texliciousCore: @})
 
     @mainView = new MainView({texliciousCore: @})
     @watcher = new Watcher({texliciousCore: @, mainView: @mainView})
@@ -117,11 +122,18 @@ class TeXlicious
     activeTextEditor = atom.workspace.getActiveTextEditor()
     activeFile = activeTextEditor.getPath()
 
-    unless activeFile?
+    for directory in atom.project.getDirectories()
+      if activeFile.indexOf(directory.realPath) isnt -1
+        @texProjectRoot = directory.realPath
+        break
+
+    unless @texProjectRoot
       return
 
     # Returns the active item if it is an instance of TextEditor.
     @texEditor = activeTextEditor
+  getTexProjectRoot: ->
+    @texProjectRoot
 
   getTexEditor: ->
     @texEditor
