@@ -7,11 +7,14 @@ errorFileLineMessagePattern = ///
 
 module.exports =
 class LogTool
+  constructor: (params) ->
+    @texliciousCore = params.texliciousCore
+
   resolveLogFile: (texFile) ->
     outputDirectory = atom.config.get('texlicious.outputDirectory') ? ''
     logFile = path.basename(texFile).split('.')[0] + '.log'
-    logFilePath = path.join(atom.project.getRootDirectory().getPath(),
-      outputDirectory, logFile)
+    logFilePath = path.join(@texliciousCore.getTexProjectRoot(),
+                            outputDirectory, logFile)
 
   readLogFile: (texFile) ->
     logFile = @resolveLogFile(texFile)

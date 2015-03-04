@@ -1,3 +1,4 @@
+#TODO: Listen for closing of watched file and stop watching when it happens.
 {CompositeDisposable} = require 'atom'
 
 module.exports =
