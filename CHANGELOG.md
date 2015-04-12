@@ -82,10 +82,14 @@
 ## 0.3.8
   * Fixed Linux crossplatform compatibility.
 
-## 0.3.9
+## 0.4.0
   Add features and fix bugs
 
-  * Add BibTex support.
+  * Added BibTex support.
   * Multiple project root support.
   * Move PDF to project root.
   * Bug fixes.
+
+## 0.4.1
+  * Changed release to minor.
+  * Fixed changelog.
