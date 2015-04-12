@@ -83,4 +83,9 @@
   * Fixed Linux crossplatform compatibility.
 
 ## 0.3.9
-  * Fixed Linux crossplatform compatibility.
+  Add features and fix bugs
+
+  * Add BibTex support.
+  * Multiple project root support.
+  * Move PDF to project root.
+  * Bug fixes.
