@@ -218,6 +218,14 @@ class TeXlicious
           marker = editor.markBufferRange(range, invalidate: 'touch')
           decoration = editor.decorateMarker(marker, {type: 'gutter', class: 'gutter-red'})
           @errorMarkers.push marker
+  movePDF: ->
+    outputDirectory = atom.config.get('texlicious.outputDirectory')
+    if outputDirectory isnt ''
+      oldPath = path.join(@getTexProjectRoot(), outputDirectory)
+      outputFiles = fs.readdirSync(oldPath)
+      for file in outputFiles
+        if path.extname(file) is '.pdf'
+          fs.renameSync(oldPath + '/' + file, @getTexProjectRoot() + '/' + file)
 
   compile: ->
     console.log "Compiling ..."
@@ -235,6 +243,8 @@ class TeXlicious
           console.log '... done compiling.'
           marker.destroy() for marker in @errorMarkers
           @errors.length = 0
+          @movePDF()
+
         else
           console.log '... error compiling.'
           @errors = @logTool.getErrors(@texFile)
