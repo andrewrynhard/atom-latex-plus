@@ -216,7 +216,7 @@ class TeXlicious
           column = editor.buffer.lineLengthForRow(row)
           range = [[row, 0], [row, column]]
           marker = editor.markBufferRange(range, invalidate: 'touch')
-          decoration = editor.decorateMarker(marker, {type: 'gutter', class: 'gutter-red'})
+          decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'gutter-red'})
           @errorMarkers.push marker
   movePDF: ->
     outputDirectory = atom.config.get('texlicious.outputDirectory')
