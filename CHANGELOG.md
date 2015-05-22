@@ -93,3 +93,7 @@
 ## 0.4.1
   * Changed release to minor.
   * Fixed changelog.
+
+## 0.4.2
+  * Merged pull request #12 from mglont/develop
+  * Merged pull request #9 from dkerzig/develop
