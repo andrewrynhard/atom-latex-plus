@@ -4,9 +4,7 @@
     'submenu': [
       label: 'TeXlicious'
       'submenu': [
-        { label: 'Compile', command: 'texlicious:compile' },
-        { label: 'Watch', command: 'texlicious:watch' },
-        { label: 'Stop', command: 'texlicious:stop' },
+        { label: 'Compile', command: 'texlicious:compile' }
       ]
     ]
   }

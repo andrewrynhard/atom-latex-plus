@@ -6,7 +6,7 @@ errorFileLineMessagePattern = ///
   ///
 
 module.exports =
-class LogTool
+class LogParser
   constructor: (params) ->
     @texliciousCore = params.texliciousCore
 
@@ -16,28 +16,13 @@ class LogTool
     logFilePath = path.join(@texliciousCore.getTexProjectRoot(),
                             outputDirectory, logFile)
 
-  readLogFile: (texFile) ->
-    logFile = @resolveLogFile(texFile)
-    try
-      logContents = fs.readFileSync(logFile)
-    catch e
-      if e.code is 'ENOENT'
-        atom.notifications.addError(e.toString(), dismissable: true)
-      else
-        atom.notifications.addError(e.toString(), dismissable: true)
-        throw (e)
-
-    logContents
-
-  getErrors: (texFile) ->
-    console.log "Parsing log file ..."
-
+  parseLogFile: (texFile, callback) ->
     errors = []
+    fs.readFile @resolveLogFile(texFile), (err, data) ->
+      if(err)
+        return err
 
-    #TODO: Try - Catch.
-    try
-      logFile = @resolveLogFile(texFile)
-      fs.readFileSync(logFile).toString().split('\n').forEach (line) ->
+      bufferString = data.toString().split('\n').forEach (line) ->
         logErrorLine = line.match(errorFileLineMessagePattern)
 
         unless logErrorLine?
@@ -51,12 +36,4 @@ class LogTool
         }
 
         errors.push error
-
-    catch e
-      if e.code is 'ENOENT'
-        atom.notifications.addError(e.toString(), dismissable: true)
-      else
-        atom.notifications.addError(e.toString(), dismissable: true)
-        throw (e)
-
-    errors
+      callback(errors)
