@@ -1,17 +1,14 @@
-# TODO: Logger for https://atom.io/docs/api/v0.176.0/Atom#instance-inDevMode.
-
 fs = require 'fs'
 path = require 'path'
 extend = require 'extend'
-
-{CompositeDisposable} = require 'atom'
+{Disposable, CompositeDisposable} = require 'atom'
 
 ProcessManager = require './process-manager'
+StatusBarManager = require './status-bar-manager'
 Latexmk = require './latexmk'
 MagicComments = require './magic-comments'
-MainView = require './views/main-view'
-LogTool = require './log-tool'
-Watcher = require './watcher'
+ErrorView = require './views/error-view'
+LogParser = require './log-parser'
 
 class TeXlicious
   config:
@@ -55,28 +52,19 @@ class TeXlicious
       type: 'boolean'
       default: false
       order: 7
-    watchDelay:
-      title: 'Watch Delay'
-      description: 'Time in seconds to wait until compiling when in watch mode.'
-      type: 'integer'
-      default: 5
-      order: 8
 
   constructor: ->
-    # Helpers
     @processManager = new ProcessManager()
+    @statusBarManager = new StatusBarManager
     @latexmk = new Latexmk({texliciousCore: @})
     @magicComments = new MagicComments({texliciousCore: @})
-    @logTool = new LogTool({texliciousCore: @})
+    @logParser = new LogParser({texliciousCore: @})
+    @errorView = new ErrorView()
 
-    @mainView = new MainView({texliciousCore: @})
-    @watcher = new Watcher({texliciousCore: @, mainView: @mainView})
-
-    # Globals (set them explicitly for readability)
+    @disposables = new CompositeDisposable
     @texEditor = null
     @texFile = null
     @errorMarkers = [] # TODO: Make this a composite disposable.
-    @errors = []
     @watching = false
 
   activate: (state) ->
@@ -84,39 +72,27 @@ class TeXlicious
       'texlicious:compile': =>
         unless @isTex()
           return
-
-        unless @mainPanel.isVisible()
-          @mainPanel.show()
-
+        @updateStatusBar('compile')
         @setTex()
         @compile()
-
-    atom.commands.add 'atom-text-editor',
-      'texlicious:watch': =>
-        unless @isTex()
-          return
-
-        unless @mainPanel.isVisible()
-          @mainPanel.show()
-
-        @setTex()
-        @watch()
-
-    atom.commands.add 'atom-text-editor',
-      'texlicious:stop': => @stop()
-
-    @mainPanel = atom.workspace.addBottomPanel
-      item: @mainView
-      visible: false
 
   deactivate: ->
     @mainPanel.destroy()
 
-  # TODO: See: https://atom.io/docs/v0.176.0/advanced/serialization.
-  # serialize: ->
+  consumeStatusBar: (statusBar) ->
+    @statusBarManager.initialize(statusBar)
+    @statusBarManager.attach()
+    @disposables.add new Disposable =>
+      @statusBarManager.detach()
+
+  updateStatusBar: (mode) ->
+    @statusBarManager.update(mode)
 
   notify: (message) ->
     atom.notifications.addInfo(message)
+
+  saveAll: ->
+    pane.saveItems() for pane in @getPanes()
 
   setTex: ->
     activeTextEditor = atom.workspace.getActiveTextEditor()
@@ -130,16 +106,20 @@ class TeXlicious
     unless @texProjectRoot
       return
 
-    # Returns the active item if it is an instance of TextEditor.
     @texEditor = activeTextEditor
+
+  isTex: ->
+    activeFile = atom.workspace.getActiveTextEditor().getPath()
+    unless path.extname(activeFile) is '.tex'
+      @notify "The file \'" + path.basename activeFile + "\' is not a TeX file."
+      return false
+    true
+
   getTexProjectRoot: ->
     @texProjectRoot
 
   getTexEditor: ->
     @texEditor
-
-  getTexFile: ->
-    @texEditor.getPath()
 
   getPanes: ->
     atom.workspace.getPanes()
@@ -150,65 +130,33 @@ class TeXlicious
   getEditors: ->
     atom.workspace.getTextEditors()
 
-  getBuffers: ->
-    (pane.buffer for pane in @getPaneItems())
-
-  getErrors: ->
-    @errors
-
-  isTex: ->
-    activeFile = atom.workspace.getActiveTextEditor().getPath()
-    unless path.extname(activeFile) is '.tex'
-      @notify "The file \'" + path.basename activeFile + "\' is not a TeX file."
-      return false
-
-    true
-
-  isWatching: ->
-    @watching
-
-  isWatchingAndWatched: ->
-    if @watching and @texEditor.watched
-      true
-    else
-      false
-
-  setWatching: (bool) ->
-    @watching = bool
-    @texEditor.watching = bool
-
-  setWatchingAndWatched: (bool) ->
-    @watching = bool
-    @texEditor.watched = bool
-
-  saveAll: ->
-    pane.saveItems() for pane in @getPanes()
-
   makeArgs: ->
     args = []
 
-    latexmkArgs = @latexmk.args @texEditor.getPath()
-    magicComments = @magicComments.getMagicComments @texEditor.getPath()
-    mergedArgs = extend(true, latexmkArgs, magicComments)
+    if @getTexEditor not null
+      latexmkArgs = @latexmk.args @texEditor.getPath()
+      magicComments = @magicComments.getMagicComments @texEditor.getPath()
+      mergedArgs = extend(true, latexmkArgs, magicComments)
+      @texFile = mergedArgs.root
 
-    @texFile = mergedArgs.root
+      args.push mergedArgs.default
+      if mergedArgs.synctex?
+        args.push mergedArgs.synctex
+      if mergedArgs.program?
+        args.push mergedArgs.program
+      if mergedArgs.outdir?
+        args.push mergedArgs.outdir
+      args.push mergedArgs.root
 
-    args.push mergedArgs.default
-    if mergedArgs.synctex?
-      args.push mergedArgs.synctex
-    if mergedArgs.program?
-      args.push mergedArgs.program
-    if mergedArgs.outdir?
-      args.push mergedArgs.outdir
-    args.push mergedArgs.root
-
-    args
+      args
 
   # TODO: Update editor gutter when file is opened.
-  updateGutters: ->
-    editors =  @getEditors()
+  updateErrors: (errors) =>
+    @errorView.update(errors)
+    atom.workspace.addBottomPanel item: @errorView
+    editors =  atom.workspace.getTextEditors()
 
-    for error in @errors
+    for error in errors
       for editor in editors
         errorFile = path.basename error.file
         if errorFile == path.basename editor.getPath()
@@ -218,51 +166,19 @@ class TeXlicious
           marker = editor.markBufferRange(range, invalidate: 'touch')
           decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'gutter-red'})
           @errorMarkers.push marker
-  movePDF: ->
-    outputDirectory = atom.config.get('texlicious.outputDirectory')
-    if outputDirectory isnt ''
-      oldPath = path.join(@getTexProjectRoot(), outputDirectory)
-      outputFiles = fs.readdirSync(oldPath)
-      for file in outputFiles
-        if path.extname(file) is '.pdf'
-          fs.renameSync(oldPath + '/' + file, @getTexProjectRoot() + '/' + file)
 
   compile: ->
-    console.log "Compiling ..."
-
     @saveAll()
-
     args = @makeArgs()
     options = @processManager.options()
-
-    @mainView.toggleCompileIndicator()
     proc = @latexmk.make args, options, (exitCode) =>
-      @mainView.toggleCompileIndicator()
       switch exitCode
         when 0
-          console.log '... done compiling.'
+          @updateStatusBar('ready')
           marker.destroy() for marker in @errorMarkers
-          @errors.length = 0
-          @movePDF()
-
+          @errorView.destroy()
         else
-          console.log '... error compiling.'
-          @errors = @logTool.getErrors(@texFile)
-
-      @updateGutters()
-      @mainView.updateErrorView()
-
-  watch: ->
-    if @isWatching()
-      @notify "Changed watched file to " + "#{path.basename @getTexFile()}"
-
-    @setWatchingAndWatched(true)
-    @watcher.startWatching()
-
-  stop: ->
-    if @isWatchingAndWatched()
-      @watcher.stopWatching()
-    else
-      @notify "You are not watching a file."
+          @updateStatusBar('error')
+          @logParser.parseLogFile(@texFile, @updateErrors)
 
 module.exports = new TeXlicious()

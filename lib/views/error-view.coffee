@@ -2,7 +2,6 @@ fs = require 'fs'
 path = require 'path'
 
 {$, ScrollView} = require 'atom-space-pen-views'
-LogTool = require '../log-tool'
 
 module.exports =
 class ErrorView extends ScrollView
@@ -26,3 +25,6 @@ class ErrorView extends ScrollView
 
     @errorContents.html(html)
     $('#error-view-div').css('display','block')
+
+  destroy: ->
+    @remove()
