@@ -1,4 +1,4 @@
-ContentsByMode =
+Messages =
   'ready': ["status-bar-texlicious-mode-compile", "TeXlicious: Ready"]
   'compile': ["status-bar-texlicious-mode-compile", "TeXlicious: Compiling... "]
   'error': ["status-bar-texlicious-mode-error", "TeXlicious: Error"]
@@ -16,15 +16,15 @@ class StatusBarManager
   initialize: (@statusBar) ->
 
   update: (mode) ->
-    if newContents = ContentsByMode[mode]
-      [klass, text] = newContents
+    if message = Messages[mode]
+      [klass, text] = message
       @element.className = klass
       @element.textContent = text
 
   # Private
 
   attach: ->
-    @tile = @statusBar.addLeftTile(item: @container, priority: 20)
+    @tile = @statusBar.addLeftTile(item: @container, priority: 100)
 
   detach: ->
     @tile.destroy()
