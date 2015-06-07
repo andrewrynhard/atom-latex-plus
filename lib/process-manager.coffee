@@ -5,17 +5,17 @@ class ProcessManager
     @delim = ''
     @PATH = switch process.platform
       when 'darwin'
+        @delim = ':'
         texbin = '/usr/texbin'
         process.env.PATH
-        @delim = ':'
       when 'linux'
+        @delim = ':'
         texbin = '/usr/texbin'
         process.env.PATH
-        @delim = ':'
       when 'win32'
+        @delim = ';'
         texbin = 'C:\\miktex\\bin'
         process.env.Path
-        @delim = ';'
 
     #TODO: Resolve texbin path automatically.
     @texPath = atom.config.get('texlicious.texPath') ? texbin
