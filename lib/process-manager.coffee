@@ -26,7 +26,7 @@ class ProcessManager
     environment = process.env
     environment.PATH =  @texPath + @delim + @PATH
     unless process.platform is 'win32'
-      environment.TEXINPUTS = @texInputs + '//:' if @texInputs isnt ''
+      environment.TEXINPUTS = @texInputs + @delim if @texInputs isnt ''
     environment.timeout = 60000
 
     environment
