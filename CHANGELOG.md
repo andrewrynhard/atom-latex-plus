@@ -97,3 +97,9 @@
 ## 0.4.2
   * Merged pull request #12 from mglont/develop
   * Merged pull request #9 from dkerzig/develop
+
+## 0.4.3
+  * Moved all of the indicators the `status-bar`.
+  * Removed the `watch` command until a better implementation can be written.
+  * Fixed #11, and #13.
+  * Fixed an issue caused by using synchronous reading of the log file.
