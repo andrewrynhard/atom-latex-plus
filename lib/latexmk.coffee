@@ -8,8 +8,7 @@ class Latexmk
     @texliciousCore = params.texliciousCore
 
   make: (args, options, callback) ->
-    latexmkpl = path.join(atom.packages.resolvePackagePath('texlicious'),'/vendor/latexmk.pl')
-    command = "perl \"#{latexmkpl}\" #{args.join(' ')}"
+    command = "latexmk #{args.join(' ')}"
     proc = exec command, options, (error, stdout, stderr) ->
       if error?
         callback(error.code)
