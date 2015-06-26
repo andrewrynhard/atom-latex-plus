@@ -68,6 +68,7 @@ class TeXlicious
     @watching = false
 
   activate: (state) ->
+    atom.workspace.addBottomPanel item: @errorView
     atom.commands.add 'atom-text-editor',
       'texlicious:compile': =>
         unless @isTex()
@@ -78,6 +79,7 @@ class TeXlicious
 
   deactivate: ->
     @mainPanel.destroy()
+    @errorView.destroy()
 
   consumeStatusBar: (statusBar) ->
     @statusBarManager.initialize(statusBar)
@@ -153,7 +155,6 @@ class TeXlicious
   # TODO: Update editor gutter when file is opened.
   updateErrors: (errors) =>
     @errorView.update(errors)
-    atom.workspace.addBottomPanel item: @errorView
     editors =  atom.workspace.getTextEditors()
 
     for error in errors
@@ -175,8 +176,8 @@ class TeXlicious
       switch exitCode
         when 0
           @updateStatusBar('ready')
+          @errorView.update(null)
           marker.destroy() for marker in @errorMarkers
-          @errorView.destroy()
         else
           @updateStatusBar('error')
           @logParser.parseLogFile(@texFile, @updateErrors)
