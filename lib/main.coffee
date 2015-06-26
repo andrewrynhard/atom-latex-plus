@@ -65,7 +65,6 @@ class TeXlicious
     @texEditor = null
     @texFile = null
     @errorMarkers = [] # TODO: Make this a composite disposable.
-    @watching = false
 
   activate: (state) ->
     atom.workspace.addBottomPanel item: @errorView
