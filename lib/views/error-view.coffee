@@ -13,7 +13,7 @@ class ErrorView extends ScrollView
       @div outlet: 'errorContents',
 
   update: (errors) ->
-    unless errors.length
+    if errors is null
       $('#error-view-div').css('display','none')
       @errorContents.html('')
       return
