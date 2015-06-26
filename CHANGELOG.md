@@ -103,3 +103,6 @@
   * Removed the `watch` command until a better implementation can be written.
   * Fixed #11, and #13.
   * Fixed an issue caused by using synchronous reading of the log file.
+
+## 0.4.4
+  * Fixed an error that caused the error view to not display.
