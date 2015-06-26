@@ -1,7 +1,7 @@
 {
   "name": "texlicious",
   "main": "./lib/main",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.",
   "repository": "https://github.com/arynhard/atom-texlicious",
   "license": "MIT",
