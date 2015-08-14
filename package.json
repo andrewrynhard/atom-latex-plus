@@ -3,20 +3,19 @@
   "main": "./lib/main",
   "version": "0.4.4",
   "description": "Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.",
+  "keywords": [
+    "tex",
+    "latex",
+    "pdflatex"
+    "xelatex",
+    "lualatex"
+  ],
   "repository": "https://github.com/arynhard/atom-texlicious",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
   },
   "dependencies": {
-    "atom-space-pen-views": "~2.0.3",
-    "extend": "~2.0.0"
-  },
-  "consumedServices": {
-    "status-bar": {
-      "versions": {
-        "^1.0.0": "consumeStatusBar"
-      }
-    }
+    "atom-message-panel": "*"
   }
 }

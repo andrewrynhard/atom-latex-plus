@@ -6,7 +6,7 @@ class ProcessManager
     @PATH = switch process.platform
       when 'darwin'
         @delim = ':'
-        texbin = '/usr/texbin'
+        texbin = '/Library/TeX/texbin'
         process.env.PATH
       when 'linux'
         @delim = ':'
@@ -31,14 +31,14 @@ class ProcessManager
 
     environment
 
-  # kill: (pid) ->
-  #   unless pid?
-  #     console.log "No pid to kill."
-  #   else
-  #     try
-  #       process.kill(pid, 'SIGINT')
-  #     catch e
-  #       if e.code is 'ESRCH'
-  #         throw new Error("Process #{pid} has already been killed.")
-  #       else
-  #         throw (e)
+  kill: (pid) ->
+    unless pid?
+      console.log "No pid to kill."
+    else
+      try
+        process.kill(pid, 'SIGINT')
+      catch e
+        if e.code is 'ESRCH'
+          throw new Error("Process #{pid} has already been killed.")
+        else
+          throw (e)

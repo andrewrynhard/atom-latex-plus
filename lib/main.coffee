@@ -3,12 +3,10 @@ path = require 'path'
 extend = require 'extend'
 {Disposable, CompositeDisposable} = require 'atom'
 
-ProcessManager = require './process-manager'
-StatusBarManager = require './status-bar-manager'
+ProcessManager = require './process_manager'
+MessageManager = require './message_manager'
 Latexmk = require './latexmk'
-MagicComments = require './magic-comments'
-ErrorView = require './views/error-view'
-LogParser = require './log-parser'
+LogParser = require './log_parser'
 
 class TeXlicious
   config:
@@ -18,142 +16,111 @@ class TeXlicious
       type: 'string'
       default: ''
       order: 1
-    texFlavor:
-      title: 'TeX Flavor'
-      description: 'Default program used to compile a TeX file.'
-      type: 'string'
-      default: 'pdflatex'
-      enum: ['lualatex', 'pdflatex', 'xelatex']
-      order: 2
     texInputs:
       title: 'TeX Packages'
       description: "Location of your custom TeX packages directory."
       type: 'string'
       default: ''
       order: 3
-    outputDirectory:
-      title: 'Output Directory'
-      description: 'Output directory relative to the project root.'
-      type: 'string'
-      default: ''
-      order: 4
     bibtexEnabled:
       title: 'Enable BibTeX'
       type: 'boolean'
       default: false
       order: 5
-    synctexEnabled:
-      title: 'Enable Synctex'
-      type: 'boolean'
-      default: false
-      order: 6
     shellEscapeEnabled:
       title: 'Enable Shell Escape'
       type: 'boolean'
       default: false
-      order: 7
+      order: 6
+
+# texFlavor:
+#   title: 'TeX Flavor'
+#   description: 'Default program used to compile a TeX file.'
+#   type: 'string'
+#   default: 'pdflatex'
+#   enum: ['lualatex', 'pdflatex', 'xelatex']
+#   order: 2
+# outputDirectory:
+#   title: 'Output Directory'
+#   description: 'Output directory relative to the project root.'
+#   type: 'string'
+#   default: ''
+#   order: 4
 
   constructor: ->
     @processManager = new ProcessManager()
-    @statusBarManager = new StatusBarManager
-    @latexmk = new Latexmk({texliciousCore: @})
-    @magicComments = new MagicComments({texliciousCore: @})
-    @logParser = new LogParser({texliciousCore: @})
-    @errorView = new ErrorView()
+    @messageManager = new MessageManager()
+    @latexmk = new Latexmk()
+    @logParser = new LogParser()
 
     @disposables = new CompositeDisposable
-    @texEditor = null
-    @texFile = null
     @errorMarkers = [] # TODO: Make this a composite disposable.
 
   activate: (state) ->
-    atom.workspace.addBottomPanel item: @errorView
-    atom.commands.add 'atom-text-editor',
-      'texlicious:compile': =>
-        unless @isTex()
-          return
-        @updateStatusBar('compile')
-        @setTex()
-        @compile()
+    atom.commands.add 'atom-text-editor', 'texlicious:compile': => @compile()
 
   deactivate: ->
     @mainPanel.destroy()
-    @errorView.destroy()
-
-  consumeStatusBar: (statusBar) ->
-    @statusBarManager.initialize(statusBar)
-    @statusBarManager.attach()
-    @disposables.add new Disposable =>
-      @statusBarManager.detach()
-
-  updateStatusBar: (mode) ->
+    @messageManager.destroy()
     @statusBarManager.update(mode)
 
-  notify: (message) ->
-    atom.notifications.addInfo(message)
-
-  saveAll: ->
-    pane.saveItems() for pane in @getPanes()
-
-  setTex: ->
-    activeTextEditor = atom.workspace.getActiveTextEditor()
-    activeFile = activeTextEditor.getPath()
-
+  loadProject: () ->
+    # set the first directory found to have a 'tex.json' file as the project
+    # root
     for directory in atom.project.getDirectories()
-      if activeFile.indexOf(directory.realPath) isnt -1
-        @texProjectRoot = directory.realPath
+      files = fs.readdirSync directory.getPath()
+
+      if "tex.json" in files
+        @projectRoot = directory.realPath
+        json = fs.readFileSync path.join(@projectRoot, "tex.json")
+
+        data = JSON.parse(json)
+        @project = data.project
+        @root = data.root
+        @program = data.program
+        @output = data.output
+
         break
 
-    unless @texProjectRoot
-      return
-
-    @texEditor = activeTextEditor
-
-  isTex: ->
-    activeFile = atom.workspace.getActiveTextEditor().getPath()
-    unless path.extname(activeFile) is '.tex'
-      @notify "The file \'" + path.basename activeFile + "\' is not a TeX file."
+  notProject: ->
+    unless @projectRoot
+      atom.notifications.addError("The project configuration file 'tex.json' must be defined in the project root")
       return false
+
     true
 
-  getTexProjectRoot: ->
-    @texProjectRoot
+  notTex: ->
+    activeFile = atom.workspace.getActiveTextEditor().getPath()
+    unless path.extname(activeFile) is '.tex'
+      atom.notifications.addInfo("The file \'" + path.basename activeFile + "\' does not have the extension '.tex'.")
+      return false
 
-  getTexEditor: ->
-    @texEditor
-
-  getPanes: ->
-    atom.workspace.getPanes()
-
-  getPaneItems: ->
-    atom.workspace.getPaneItems()
-
-  getEditors: ->
-    atom.workspace.getTextEditors()
+    true
 
   makeArgs: ->
     args = []
 
-    if @getTexEditor not null
-      latexmkArgs = @latexmk.args @texEditor.getPath()
-      magicComments = @magicComments.getMagicComments @texEditor.getPath()
-      mergedArgs = extend(true, latexmkArgs, magicComments)
-      @texFile = mergedArgs.root
+    latexmkArgs = {
+      default: '-interaction=nonstopmode -f -cd -pdf -file-line-error'
+    }
 
-      args.push mergedArgs.default
-      if mergedArgs.synctex?
-        args.push mergedArgs.synctex
-      if mergedArgs.program?
-        args.push mergedArgs.program
-      if mergedArgs.outdir?
-        args.push mergedArgs.outdir
-      args.push mergedArgs.root
+    latexmkArgs.bibtex = '-bibtex' if atom.config.get('texlicious.bibtexEnabled')
+    latexmkArgs.shellEscape = '-shell-escape' if atom.config.get('texlicious.shellEscapeEnabled')
 
-      args
+    args.push latexmkArgs.default
+    if latexmkArgs.shellEscape?
+      args.push latexmkArgs.shellEscape
+    if latexmkArgs.bibtex?
+      args.push latexmkArgs.bibtex
+    args.push "-#{@program}"
+    args.push "-outdir=\"#{path.join(@projectRoot, @output)}\""
+    args.push "\"#{path.join(@projectRoot, @root)}\""
+
+    args
 
   # TODO: Update editor gutter when file is opened.
-  updateErrors: (errors) =>
-    @errorView.update(errors)
+  updateGutter: (errors) =>
+    @messageManager.update(errors)
     editors =  atom.workspace.getTextEditors()
 
     for error in errors
@@ -168,17 +135,29 @@ class TeXlicious
           @errorMarkers.push marker
 
   compile: ->
-    @saveAll()
+    @loadProject()
+
+    # require a '.tex' extension
+    unless @notTex()
+      return
+
+    # require a 'tex.json' configuration file to be defined
+    unless @notProject()
+      return
+
+    # save all modified tex files before compiling
+    for pane in atom.workspace.getPanes()
+      pane.saveItems()
+
     args = @makeArgs()
     options = @processManager.options()
     proc = @latexmk.make args, options, (exitCode) =>
       switch exitCode
         when 0
-          @updateStatusBar('ready')
-          @errorView.update(null)
+          @messageManager.update(null)
           marker.destroy() for marker in @errorMarkers
         else
-          @updateStatusBar('error')
-          @logParser.parseLogFile(@texFile, @updateErrors)
+          log = path.join(@projectRoot, @output, path.basename(@root).split('.')[0] + '.log')
+          @logParser.parseLogFile(log, @updateGutter)
 
 module.exports = new TeXlicious()

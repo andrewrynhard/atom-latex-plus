@@ -106,3 +106,9 @@
 
 ## 0.4.4
   * Fixed an error that caused the error view to not display.
+
+## 0.5.0
+  * Added `tex.json` config file.
+  * Removed `synctex` option.
+  * Improved error messages.
+  * Added `travis.yml`.
