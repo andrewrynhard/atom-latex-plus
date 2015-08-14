@@ -112,3 +112,9 @@
   * Removed `synctex` option.
   * Improved error messages.
   * Added `travis.yml`.
+
+## 0.5.1
+  * Fixed travis-ci build.
+
+## 0.5.2
+  * Now uses status-bar and message-panel.
