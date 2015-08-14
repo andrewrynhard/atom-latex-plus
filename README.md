@@ -1,4 +1,4 @@
-# TeXlicious
+# TeXlicious [![Build Status](https://travis-ci.org/arynhard/atom-texlicious.svg?branch=master)](https://travis-ci.org/arynhard/atom-texlicious)
 
 Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.
 
