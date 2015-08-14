@@ -9,7 +9,7 @@ Atom package manager or `apm install texlicious`.
   * Define a project configuration file, `tex.json`, in the root of you latex project.
   * Compile the project with `ˆ⇧C`.
 
-##### Example `tex.json`:
+## Project Configuration Example
 ```` json
 {
   "project": "Example TeXlicious Project",
@@ -18,3 +18,6 @@ Atom package manager or `apm install texlicious`.
   "output": ".texlicious"
 }
 ````
+
+## Demo
+![Alt text](/demo.gif?raw=true)
