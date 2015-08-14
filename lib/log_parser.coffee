@@ -7,18 +7,9 @@ errorFileLineMessagePattern = ///
 
 module.exports =
 class LogParser
-  constructor: (params) ->
-    @texliciousCore = params.texliciousCore
-
-  resolveLogFile: (texFile) ->
-    outputDirectory = atom.config.get('texlicious.outputDirectory') ? ''
-    logFile = path.basename(texFile).split('.')[0] + '.log'
-    logFilePath = path.join(@texliciousCore.getTexProjectRoot(),
-                            outputDirectory, logFile)
-
-  parseLogFile: (texFile, callback) ->
+  parseLogFile: (log, callback) ->
     errors = []
-    fs.readFile @resolveLogFile(texFile), (err, data) ->
+    fs.readFile log, (err, data) ->
       if(err)
         return err
 
