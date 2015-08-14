@@ -5,6 +5,7 @@ extend = require 'extend'
 
 ProcessManager = require './process_manager'
 MessageManager = require './message_manager'
+StatusBarManager = require './status_bar_manager'
 Latexmk = require './latexmk'
 LogParser = require './log_parser'
 
@@ -33,23 +34,10 @@ class TeXlicious
       default: false
       order: 6
 
-# texFlavor:
-#   title: 'TeX Flavor'
-#   description: 'Default program used to compile a TeX file.'
-#   type: 'string'
-#   default: 'pdflatex'
-#   enum: ['lualatex', 'pdflatex', 'xelatex']
-#   order: 2
-# outputDirectory:
-#   title: 'Output Directory'
-#   description: 'Output directory relative to the project root.'
-#   type: 'string'
-#   default: ''
-#   order: 4
-
   constructor: ->
     @processManager = new ProcessManager()
     @messageManager = new MessageManager()
+    @statusBarManager = new StatusBarManager()
     @latexmk = new Latexmk()
     @logParser = new LogParser()
 
@@ -81,6 +69,12 @@ class TeXlicious
         @output = data.output
 
         break
+
+  consumeStatusBar: (statusBar) ->
+    @statusBarManager.initialize(statusBar)
+    @statusBarManager.attach()
+    @disposables.add new Disposable =>
+      @statusBarManager.detach()
 
   notProject: ->
     unless @projectRoot
@@ -135,6 +129,7 @@ class TeXlicious
           @errorMarkers.push marker
 
   compile: ->
+    @statusBarManager.update('compile')
     @loadProject()
 
     # require a '.tex' extension
@@ -154,9 +149,11 @@ class TeXlicious
     proc = @latexmk.make args, options, (exitCode) =>
       switch exitCode
         when 0
+          @statusBarManager.update('ready')
           @messageManager.update(null)
           marker.destroy() for marker in @errorMarkers
         else
+          @statusBarManager.update('error')
           log = path.join(@projectRoot, @output, path.basename(@root).split('.')[0] + '.log')
           @logParser.parseLogFile(log, @updateGutter)
 

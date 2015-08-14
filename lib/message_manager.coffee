@@ -6,11 +6,12 @@ module.exports =
 class MessageView
 
   constructor: ->
-    @messagepanel = new MessagePanelView({title: 'TeXlicious'}) unless @messagepanel?
+    @messagepanel = new MessagePanelView({title: 'Errors:'}) unless @messagepanel?
 
   update: (errors) ->
     @messagepanel.clear()
     if errors == null
+      @messagepanel.close()
       return
 
     for error in errors
