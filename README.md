@@ -1,5 +1,5 @@
 # TeXlicious
-[![Build Status](https://travis-ci.org/arynhard/atom-texlicious.svg?branch=master)](https://travis-ci.org/arynhard/atom-texlicious)
+[![Build Status](https://travis-ci.org/andrewrynhard/atom-texlicious.svg?branch=master)](https://travis-ci.org/andrewrynhard/atom-texlicious)
 [![Plugin installs!](https://img.shields.io/apm/dm/texlicious.svg?style=flat-square)](https://atom.io/packages/texlicious)
 [![Package version!](https://img.shields.io/apm/v/texlicious.svg?style=flat-square)](https://atom.io/packages/texlicious)
 
