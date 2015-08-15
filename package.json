@@ -10,7 +10,7 @@
     "xelatex",
     "lualatex"
   ],
-  "repository": "https://github.com/arynhard/atom-texlicious",
+  "repository": "https://github.com/andrewrynhard/atom-texlicious",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"

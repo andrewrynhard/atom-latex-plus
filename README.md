@@ -1,4 +1,7 @@
-# TeXlicious [![Build Status](https://travis-ci.org/arynhard/atom-texlicious.svg?branch=master)](https://travis-ci.org/arynhard/atom-texlicious)
+# TeXlicious
+[![Build Status](https://travis-ci.org/arynhard/atom-texlicious.svg?branch=master)](https://travis-ci.org/arynhard/atom-texlicious)
+[![Plugin installs!](https://img.shields.io/apm/dm/texlicious.svg?style=flat-square)](https://atom.io/packages/texlicious)
+[![Package version!](https://img.shields.io/apm/v/texlicious.svg?style=flat-square)](https://atom.io/packages/texlicious)
 
 Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.
 

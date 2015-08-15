@@ -1,5 +1,4 @@
 fs = require 'fs'
-path = require 'path'
 
 errorFileLineMessagePattern = ///
   ^(\.\/|[A-D:])(.*\.tex):(\d*):\s(.*)
