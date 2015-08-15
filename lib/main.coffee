@@ -1,6 +1,6 @@
 fs = require 'fs'
 path = require 'path'
-extend = require 'extend'
+# extend = require 'extend'
 {Disposable, CompositeDisposable} = require 'atom'
 
 ProcessManager = require './process_manager'
