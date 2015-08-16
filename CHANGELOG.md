@@ -118,3 +118,12 @@
 
 ## 0.5.2
   * Now uses status-bar and message-panel.
+
+## 0.5.3
+  * Bug fixes.
+
+## 0.5.4
+  * Bug fixes.
+
+## 0.5.5
+  * Merge #17
