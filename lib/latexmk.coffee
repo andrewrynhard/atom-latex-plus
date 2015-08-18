@@ -8,6 +8,7 @@ class Latexmk
     command = "latexmk #{args.join(' ')}"
     proc = exec command, options, (error, stdout, stderr) ->
       if error?
+        console.log error
         callback(error.code)
       else
         callback(0)
