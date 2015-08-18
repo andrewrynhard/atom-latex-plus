@@ -107,7 +107,8 @@ class TeXlicious
       args.push latexmkArgs.shellEscape
     if latexmkArgs.bibtex?
       args.push latexmkArgs.bibtex
-    args.push "-#{@program}"
+    unless @program == "pdflatex"
+      args.push "-#{@program}"
     args.push "-outdir=\"#{@output}\""
     args.push "\"#{@root}\""
 
