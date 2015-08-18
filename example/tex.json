@@ -1,5 +1,5 @@
 {
-  "project": "Example TeXlicious Project",
+  "project": "TeXlicious Project",
   "root": "main.tex",
   "program": "xelatex",
   "output": ".texlicious"
