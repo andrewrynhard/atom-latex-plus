@@ -1,5 +1,6 @@
 fs = require 'fs'
 path = require 'path'
+async = require 'async'
 readdirp = require 'readdirp'
 {Disposable, CompositeDisposable} = require 'atom'
 
@@ -34,6 +35,14 @@ class TeXlicious
       default: false
       order: 6
 
+  cfg: {
+    path: null,
+    project: null,
+    root: null,
+    program: null,
+    output: null
+  }
+
   constructor: ->
     @processManager = new ProcessManager()
     @messageManager = new MessageManager()
@@ -46,58 +55,75 @@ class TeXlicious
 
   activate: (state) ->
     atom.commands.add 'atom-text-editor', 'texlicious:compile': =>
-      @loadProject(@compile)
+      file = atom.workspace.getActiveTextEditor().getPath()
 
+      if !@cfg.path? || file.indexOf(@cfg.path) > -1
+        if @loadProject(file)
+          @compile()
+      else
+        @compile()
 
   deactivate: ->
     @messageManager.destroy()
     @statusBarManager.destroy()
 
-  loadProject: (callback) ->
-    editor = atom.workspace.getActiveTextEditor()
-    file = editor.getPath()
+  loadProject: (file, callback) ->
+    @resetCfg()
+    for project in atom.project.getPaths()
+      # if the current file is not in `project` advance to the next iteration
+      unless file.indexOf(project) > -1
+        continue
 
-    # if the current file is not in the current projectRoot, find the new
-    # project's settings
-    if file.indexOf(@projectRoot) > -1
-      callback()
-      return
-
-    for directory in atom.project.getPaths()
-     if file.indexOf(directory) > -1
-      readdirp({ root: directory, depth: 1, entryType: 'files', fileFilter: 'tex.json' })
-      .on 'data', (config) =>
-        @projectRoot = directory
-
-        fs.watchFile config.fullPath, (curr, prev) =>
+      exists = fs.existsSync "#{project}/tex.json"
+      if exists
+        # watch for changes in the project configuration
+        fs.watchFile "#{project}/tex.json", (curr, prev) =>
           if curr.mtime != prev.mtime
-            @setProject(config.fullPath, callback)
+            @setCfg(project)
+      else
+        atom.notifications.addError("A project configuration file must be defined in #{project}.")
 
-        @setProject(config.fullPath, callback)
-      .on 'end', () =>
-        unless @projectRoot?
-          atom.notifications.addError("The project \'#{path.basename directory.getPath()}\' is not a valid project.")
+      if @setCfg(project)
+        return true
+      else
+        return false
 
-  setProject: (config, callback) ->
-    fs.readFile config, (err, json) =>
-      data = JSON.parse(json)
-      @statusBarManager.project = data.project
-      @root = path.join(@projectRoot, data.root)
-      unless path.extname(@root) is '.tex'
-        atom.notifications.addInfo("The project root does not have the extension '.tex'.")
-        return
+  setCfg: (project) ->
+    @cfg.path = "#{project}/tex.json"
 
-      fs.exists @root , (exists) =>
-        unless exists
-          atom.notifications.addError("The project configuration file must be defined in #{path.basename @projectRoot}.")
-          return
+    data = fs.readFileSync @cfg.path
+    cfg = JSON.parse(data)
 
-        # TODO: check if the program is valid
-        @program = data.program
-        @output = path.join(@projectRoot, data.output)
+    @cfg.root = path.join(project, cfg.root)
+    unless path.extname(@cfg.root) is '.tex'
+      atom.notifications.addInfo("The project root does not have the extension '.tex'.")
+      return false
 
-        @statusBarManager.update('ready')
-        callback()
+    exists = fs.existsSync @cfg.root
+    unless exists
+      atom.notifications.addError("The project root does not exist.")
+      return false
+
+    # TODO: check if the program is valid
+    @cfg.program = cfg.program
+    @cfg.output = path.join(project, cfg.output)
+
+    @cfg.project = cfg.project
+    @statusBarManager.project = @cfg.project
+    @statusBarManager.update('ready')
+
+    return true
+
+  resetCfg: ->
+    # stop watching for changes in the project configuration
+    if @cfg.path?
+      fs.unwatchFile(@cfg.path)
+
+    @cfg.path = null
+    @cfg.project = null
+    @cfg.root = null
+    @cfg.program = null
+    @cfg.output = null
 
   consumeStatusBar: (statusBar) ->
     @statusBarManager.initialize(statusBar)
@@ -120,10 +146,10 @@ class TeXlicious
       args.push latexmkArgs.shellEscape
     if latexmkArgs.bibtex?
       args.push latexmkArgs.bibtex
-    unless @program == "pdflatex"
-      args.push "-#{@program}"
-    args.push "-outdir=\"#{@output}\""
-    args.push "\"#{@root}\""
+    unless @cfg.program == "pdflatex"
+      args.push "-#{@cfg.program}"
+    args.push "-outdir=\"#{@cfg.output}\""
+    args.push "\"#{@cfg.root}\""
 
     args
 
@@ -160,7 +186,7 @@ class TeXlicious
           marker.destroy() for marker in @errorMarkers
         else
           @statusBarManager.update('error')
-          log = path.join(@output, path.basename(@root).split('.')[0] + '.log')
+          log = path.join(@cfg.output, path.basename(@cfg.root).split('.')[0] + '.log')
           @logParser.parseLogFile(log, @updateGutter)
 
 module.exports = new TeXlicious()
