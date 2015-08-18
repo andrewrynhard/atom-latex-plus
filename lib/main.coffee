@@ -45,28 +45,40 @@ class TeXlicious
     @errorMarkers = [] # TODO: Make this a composite disposable.
 
   activate: (state) ->
-    @loadProject()
-    atom.commands.add 'atom-text-editor', 'texlicious:compile': => @compile()
+    atom.commands.add 'atom-text-editor', 'texlicious:compile': =>
+      @loadProject(@compile)
+
 
   deactivate: ->
-    @mainPanel.destroy()
     @messageManager.destroy()
-    @statusBarManager.update(mode)
+    @statusBarManager.destroy()
 
-  loadProject: () ->
-    # allow only the first atom project to be a texlicious project
-    directory = atom.project.getDirectories()[0]
-    readdirp({ root: directory.getPath(), depth: 1, fileFilter: 'tex.json' })
-    .on 'data', (config) =>
-      @projectRoot = directory.getPath()
+  loadProject: (callback) ->
+    editor = atom.workspace.getActiveTextEditor()
+    file = editor.getPath()
 
-      fs.watchFile config.fullPath, (curr, prev) =>
-        if curr.mtime != prev.mtime
-          @setProject config.fullPath
+    # if the current file is not in the current projectRoot, find the new
+    # project's settings
+    if file.indexOf(@projectRoot) > -1
+      callback()
+      return
 
-      @setProject(config.fullPath)
+    for directory in atom.project.getPaths()
+     if file.indexOf(directory) > -1
+      readdirp({ root: directory, depth: 1, entryType: 'files', fileFilter: 'tex.json' })
+      .on 'data', (config) =>
+        @projectRoot = directory
 
-  setProject: (config) ->
+        fs.watchFile config.fullPath, (curr, prev) =>
+          if curr.mtime != prev.mtime
+            @setProject(config.fullPath, callback)
+
+        @setProject(config.fullPath, callback)
+      .on 'end', () =>
+        unless @projectRoot?
+          atom.notifications.addError("The project \'#{path.basename directory.getPath()}\' is not a valid project.")
+
+  setProject: (config, callback) ->
     fs.readFile config, (err, json) =>
       data = JSON.parse(json)
       @statusBarManager.project = data.project
@@ -85,6 +97,7 @@ class TeXlicious
         @output = path.join(@projectRoot, data.output)
 
         @statusBarManager.update('ready')
+        callback()
 
   consumeStatusBar: (statusBar) ->
     @statusBarManager.initialize(statusBar)

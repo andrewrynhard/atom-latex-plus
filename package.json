@@ -25,5 +25,8 @@
         "^1.0.0": "consumeStatusBar"
       }
     }
+  },
+  "activationCommands": {
+    "atom-workspace": "texlicious:compile"
   }
 }

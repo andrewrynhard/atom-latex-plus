@@ -30,3 +30,9 @@ class StatusBarManager
 
   detach: ->
     @tile.destroy()
+
+  destroy: =>
+    @element?.remove()
+    @element = null
+    @container?.remove()
+    @container = null
