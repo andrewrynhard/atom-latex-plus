@@ -1,5 +1,6 @@
 fs = require 'fs'
 path = require 'path'
+readdirp = require 'readdirp'
 {Disposable, CompositeDisposable} = require 'atom'
 
 ProcessManager = require './process_manager'
@@ -44,6 +45,7 @@ class TeXlicious
     @errorMarkers = [] # TODO: Make this a composite disposable.
 
   activate: (state) ->
+    @loadProject()
     atom.commands.add 'atom-text-editor', 'texlicious:compile': => @compile()
 
   deactivate: ->
@@ -52,43 +54,43 @@ class TeXlicious
     @statusBarManager.update(mode)
 
   loadProject: () ->
-    # set the first directory found to have a 'tex.json' file as the project
-    # root
-    for directory in atom.project.getDirectories()
-      files = fs.readdirSync directory.getPath()
+    # allow only the first atom project to be a texlicious project
+    directory = atom.project.getDirectories()[0]
+    readdirp({ root: directory.getPath(), depth: 1, fileFilter: 'tex.json' })
+    .on 'data', (config) =>
+      @projectRoot = directory.getPath()
 
-      if "tex.json" in files
-        @projectRoot = directory.realPath
-        json = fs.readFileSync path.join(@projectRoot, "tex.json")
+      fs.watchFile config.fullPath, (curr, prev) =>
+        if curr.mtime != prev.mtime
+          @setProject config.fullPath
 
-        data = JSON.parse(json)
-        @project = data.project
-        @root = data.root
+      @setProject(config.fullPath)
+
+  setProject: (config) ->
+    fs.readFile config, (err, json) =>
+      data = JSON.parse(json)
+      @project = data.project
+      @root = path.join(@projectRoot, data.root)
+      unless path.extname(@root) is '.tex'
+        atom.notifications.addInfo("The project root does not have the extension '.tex'.")
+        return
+
+      fs.exists @root , (exists) =>
+        unless exists
+          atom.notifications.addError("The project configuration file must be defined in #{path.basename @projectRoot}.")
+          return
+
+        # TODO: check if the program is valid
         @program = data.program
-        @output = data.output
+        @output = path.join(@projectRoot, data.output)
 
-        break
+    @statusBarManager.update('ready')
 
   consumeStatusBar: (statusBar) ->
     @statusBarManager.initialize(statusBar)
     @statusBarManager.attach()
     @disposables.add new Disposable =>
       @statusBarManager.detach()
-
-  notProject: ->
-    unless @projectRoot
-      atom.notifications.addError("The project configuration file 'tex.json' must be defined in the project root")
-      return false
-
-    true
-
-  notTex: ->
-    activeFile = atom.workspace.getActiveTextEditor().getPath()
-    unless path.extname(activeFile) is '.tex'
-      atom.notifications.addInfo("The file \'" + path.basename activeFile + "\' does not have the extension '.tex'.")
-      return false
-
-    true
 
   makeArgs: ->
     args = []
@@ -106,8 +108,8 @@ class TeXlicious
     if latexmkArgs.bibtex?
       args.push latexmkArgs.bibtex
     args.push "-#{@program}"
-    args.push "-outdir=\"#{path.join(@projectRoot, @output)}\""
-    args.push "\"#{path.join(@projectRoot, @root)}\""
+    args.push "-outdir=\"#{@output}\""
+    args.push "\"#{@root}\""
 
     args
 
@@ -127,17 +129,8 @@ class TeXlicious
           decoration = editor.decorateMarker(marker, {type: 'line-number', class: 'gutter-red'})
           @errorMarkers.push marker
 
-  compile: ->
+  compile: =>
     @statusBarManager.update('compile')
-    @loadProject()
-
-    # require a '.tex' extension
-    unless @notTex()
-      return
-
-    # require a 'tex.json' configuration file to be defined
-    unless @notProject()
-      return
 
     # save all modified tex files before compiling
     for pane in atom.workspace.getPanes()

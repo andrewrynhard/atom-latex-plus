@@ -1,6 +1,6 @@
 ContentsByMode =
   'ready': ["status-bar-texlicious-mode-compile", "TeXlicious: Ready"]
-  'compile': ["status-bar-texlicious-mode-compile", "TeXlicious: Compiling... "]
+  'compile': ["status-bar-texlicious-mode-compile", "TeXlicious: Compiling ... "]
   'error': ["status-bar-texlicious-mode-error", "TeXlicious: Error"]
 
 module.exports =
