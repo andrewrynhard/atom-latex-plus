@@ -21,7 +21,7 @@ class StatusBarManager
     if newContents = ContentsByMode[mode]
       [klass, status] = newContents
       @element.className = klass
-      @element.textContent = "Project: #{@project} || Status: #{status}"
+      @element.textContent = "#{@project}: #{status}"
 
   # Private
 
