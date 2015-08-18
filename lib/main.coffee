@@ -147,7 +147,7 @@ class TeXlicious
           marker.destroy() for marker in @errorMarkers
         else
           @statusBarManager.update('error')
-          log = path.join(@projectRoot, @output, path.basename(@root).split('.')[0] + '.log')
+          log = path.join(@output, path.basename(@root).split('.')[0] + '.log')
           @logParser.parseLogFile(log, @updateGutter)
 
 module.exports = new TeXlicious()
