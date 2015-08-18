@@ -1,7 +1,7 @@
 ContentsByMode =
-  'ready': ["status-bar-texlicious-mode-compile", "TeXlicious: Ready"]
-  'compile': ["status-bar-texlicious-mode-compile", "TeXlicious: Compiling ... "]
-  'error': ["status-bar-texlicious-mode-error", "TeXlicious: Error"]
+  'ready': ["status-bar-texlicious-mode-compile", "Ready"]
+  'compile': ["status-bar-texlicious-mode-compile", "Compiling ... "]
+  'error': ["status-bar-texlicious-mode-error", "Error"]
 
 module.exports =
 class StatusBarManager
@@ -15,11 +15,13 @@ class StatusBarManager
 
   initialize: (@statusBar) ->
 
+  project: null
+
   update: (mode) ->
     if newContents = ContentsByMode[mode]
-      [klass, text] = newContents
+      [klass, status] = newContents
       @element.className = klass
-      @element.textContent = text
+      @element.textContent = "Project: #{@project} || Status: #{status}"
 
   # Private
 

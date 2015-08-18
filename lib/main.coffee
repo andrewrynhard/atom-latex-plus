@@ -69,7 +69,7 @@ class TeXlicious
   setProject: (config) ->
     fs.readFile config, (err, json) =>
       data = JSON.parse(json)
-      @project = data.project
+      @statusBarManager.project = data.project
       @root = path.join(@projectRoot, data.root)
       unless path.extname(@root) is '.tex'
         atom.notifications.addInfo("The project root does not have the extension '.tex'.")
@@ -84,7 +84,7 @@ class TeXlicious
         @program = data.program
         @output = path.join(@projectRoot, data.output)
 
-    @statusBarManager.update('ready')
+        @statusBarManager.update('ready')
 
   consumeStatusBar: (statusBar) ->
     @statusBarManager.initialize(statusBar)
