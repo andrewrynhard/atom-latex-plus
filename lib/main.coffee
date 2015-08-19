@@ -57,7 +57,9 @@ class TeXlicious
     atom.commands.add 'atom-text-editor', 'texlicious:compile': =>
       file = atom.workspace.getActiveTextEditor().getPath()
 
-      if !@cfg.path? || file.indexOf(@cfg.path) > -1
+      # if the configuration file is not set or the file is not in the current
+      # configuration path, then load the configuration and compile
+      if !@cfg.path? || file.indexOf(@cfg.path) < 0
         if @loadProject(file)
           @compile()
       else
