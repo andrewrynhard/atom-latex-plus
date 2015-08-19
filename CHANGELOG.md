@@ -134,3 +134,6 @@
 
 ## 0.5.7
   * Fix project switching.
+
+## 0.5.8
+  * Fix message panel file link.
