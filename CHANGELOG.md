@@ -139,4 +139,7 @@
   * Fix message panel file link.
 
 ## 0.5.9
-  * Fix missing module
+  * Remove missing async module
+
+## 0.5.10
+  * Remove missing readdirp module

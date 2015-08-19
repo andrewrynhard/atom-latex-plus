@@ -1,6 +1,5 @@
 fs = require 'fs'
 path = require 'path'
-readdirp = require 'readdirp'
 {Disposable, CompositeDisposable} = require 'atom'
 
 ProcessManager = require './process_manager'
