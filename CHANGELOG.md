@@ -126,8 +126,11 @@
   * Bug fixes.
 
 ## 0.5.5
-  * Merge #17
+  * Merge #17.
 
 ## 0.5.6
   * Fix #18
-  * Allow multiple projects to be open at once
+  * Allow multiple projects to be open at once.
+
+## 0.5.7
+  * Fix project switching.
