@@ -143,3 +143,6 @@
 
 ## 0.5.10
   * Remove missing readdirp module
+
+## 0.5.11
+  * Fix an error caused by a missing configuration file.
