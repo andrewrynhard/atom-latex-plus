@@ -127,3 +127,7 @@
 
 ## 0.5.5
   * Merge #17
+
+## 0.5.6
+  * Fix #18
+  * Allow multiple projects to be open at once
