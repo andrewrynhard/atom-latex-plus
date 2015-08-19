@@ -1,7 +1,7 @@
 {
   "name": "texlicious",
   "main": "./lib/main",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.",
   "keywords": [
     "tex",
