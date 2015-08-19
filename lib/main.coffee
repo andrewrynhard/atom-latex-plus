@@ -1,6 +1,5 @@
 fs = require 'fs'
 path = require 'path'
-async = require 'async'
 readdirp = require 'readdirp'
 {Disposable, CompositeDisposable} = require 'atom'
 
