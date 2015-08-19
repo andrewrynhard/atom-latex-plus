@@ -137,3 +137,6 @@
 
 ## 0.5.8
   * Fix message panel file link.
+
+## 0.5.9
+  * Fix missing module
