@@ -82,6 +82,7 @@ class TeXlicious
             @setCfg(project)
       else
         atom.notifications.addError("A project configuration file must be defined in #{project}.")
+        return false
 
       if @setCfg(project)
         return true
@@ -107,8 +108,8 @@ class TeXlicious
     # TODO: check if the program is valid
     @cfg.program = cfg.program
     @cfg.output = path.join(project, cfg.output)
-
     @cfg.project = cfg.project
+
     @statusBarManager.project = @cfg.project
     @statusBarManager.update('ready')
 
