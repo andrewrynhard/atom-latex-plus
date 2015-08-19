@@ -1,4 +1,5 @@
 fs = require 'fs'
+path = require 'path'
 
 errorFileLineMessagePattern = ///
   ^(\.\/|[A-D:])(.*\.tex):(\d*):\s(.*)
@@ -6,7 +7,7 @@ errorFileLineMessagePattern = ///
 
 module.exports =
 class LogParser
-  parseLogFile: (log, callback) ->
+  parseLogFile: (rootPath, log, callback) ->
     errors = []
     fs.readFile log, (err, data) ->
       if(err)
@@ -20,7 +21,7 @@ class LogParser
 
         errorInfo = line.match(errorFileLineMessagePattern)
         error = {
-          file:     errorInfo[2]
+          file:     path.join(rootPath, path.normalize(errorInfo[2]))
           line:     errorInfo[3]
           message:  errorInfo[4]
         }

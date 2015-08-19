@@ -189,6 +189,6 @@ class TeXlicious
         else
           @statusBarManager.update('error')
           log = path.join(@cfg.output, path.basename(@cfg.root).split('.')[0] + '.log')
-          @logParser.parseLogFile(log, @updateGutter)
+          @logParser.parseLogFile(path.dirname(@cfg.root), log, @updateGutter)
 
 module.exports = new TeXlicious()
