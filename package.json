@@ -1,7 +1,7 @@
 {
   "name": "latex-plus",
   "main": "./lib/main",
-  "version": "0.5.12",
+  "version": "0.6.0",
   "description": "Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.",
   "keywords": [
     "tex",
