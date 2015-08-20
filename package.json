@@ -1,5 +1,5 @@
 {
-  "name": "texlicious",
+  "name": "latex-plus",
   "main": "./lib/main",
   "version": "0.5.11",
   "description": "Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.",
