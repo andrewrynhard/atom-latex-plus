@@ -126,26 +126,29 @@
   * Bug fixes.
 
 ## 0.5.5
-  * Merge #17.
+  * Merged #17.
 
 ## 0.5.6
-  * Fix #18
+  * Fixed #18
   * Allow multiple projects to be open at once.
 
 ## 0.5.7
-  * Fix project switching.
+  * Fixed project switching.
 
 ## 0.5.8
-  * Fix message panel file link.
+  * Fixed message panel file link.
 
 ## 0.5.9
-  * Remove missing async module
+  * Removed missing async module
 
 ## 0.5.10
-  * Remove missing readdirp module
+  * Removed missing readdirp module
 
 ## 0.5.11
-  * Fix an error caused by a missing configuration file.
+  * Fixed an error caused by a missing configuration file.
+
+## 0.5.12
+  * Renamed package
 
 ## 0.6.0
-  * Renamed package
+  * Fixed changelog.
