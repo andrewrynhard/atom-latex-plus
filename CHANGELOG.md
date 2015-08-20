@@ -152,3 +152,6 @@
 
 ## 0.6.0
   * Fixed changelog.
+
+## 0.6.1
+  * Pushed to fix apm publish error.
