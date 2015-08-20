@@ -18,9 +18,9 @@ class ProcessManager
         process.env.Path
 
     #TODO: Resolve texbin path automatically.
-    @texPath = atom.config.get('texlicious.texPath') ? texbin
+    @texPath = atom.config.get('latex-plus.texPath') ? texbin
     #TODO: Get the users TEXINPUTS if they are defined in process.env.
-    @texInputs = atom.config.get('texlicious.texInputs') ? ''
+    @texInputs = atom.config.get('latex-plus.texInputs') ? ''
 
   options: () ->
     environment = process.env

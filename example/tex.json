@@ -1,6 +1,6 @@
 {
-  "project": "TeXlicious Project",
+  "project": "LaTeX-Plus Example",
   "root": "main.tex",
   "program": "xelatex",
-  "output": ".texlicious"
+  "output": ".latex"
 }

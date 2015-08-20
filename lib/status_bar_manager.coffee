@@ -1,13 +1,13 @@
 ContentsByMode =
-  'ready': ["status-bar-texlicious-mode-compile", "Ready"]
-  'compile': ["status-bar-texlicious-mode-compile", "Compiling ... "]
-  'error': ["status-bar-texlicious-mode-error", "Error"]
+  'ready': ["status-bar-latex-plus-mode-compile", "Ready"]
+  'compile': ["status-bar-latex-plus-mode-compile", "Compiling ... "]
+  'error': ["status-bar-latex-plus-mode-error", "Error"]
 
 module.exports =
 class StatusBarManager
   constructor: ->
     @element = document.createElement("div")
-    @element.id = "status-bar-texlicious-mode"
+    @element.id = "status-bar-latex-plus-mode"
 
     @container = document.createElement("div")
     @container.className = "inline-block"

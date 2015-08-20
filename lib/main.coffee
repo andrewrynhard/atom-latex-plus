@@ -8,7 +8,7 @@ StatusBarManager = require './status_bar_manager'
 Latexmk = require './latexmk'
 LogParser = require './log_parser'
 
-class TeXlicious
+class LatexPlus
   config:
     texPath:
       title: 'TeX Path'
@@ -52,7 +52,7 @@ class TeXlicious
     @errorMarkers = [] # TODO: Make this a composite disposable.
 
   activate: (state) ->
-    atom.commands.add 'atom-text-editor', 'texlicious:compile': =>
+    atom.commands.add 'atom-text-editor', 'latex-plus:compile': =>
       file = atom.workspace.getActiveTextEditor().getPath()
 
       # if the configuration file is not set or the file is not in the current
@@ -139,8 +139,8 @@ class TeXlicious
       default: '-interaction=nonstopmode -f -cd -pdf -file-line-error'
     }
 
-    latexmkArgs.bibtex = '-bibtex' if atom.config.get('texlicious.bibtexEnabled')
-    latexmkArgs.shellEscape = '-shell-escape' if atom.config.get('texlicious.shellEscapeEnabled')
+    latexmkArgs.bibtex = '-bibtex' if atom.config.get('latex-plus.bibtexEnabled')
+    latexmkArgs.shellEscape = '-shell-escape' if atom.config.get('latex-plus.shellEscapeEnabled')
 
     args.push latexmkArgs.default
     if latexmkArgs.shellEscape?
@@ -190,4 +190,4 @@ class TeXlicious
           log = path.join(@cfg.output, path.basename(@cfg.root).split('.')[0] + '.log')
           @logParser.parseLogFile(path.dirname(@cfg.root), log, @updateGutter)
 
-module.exports = new TeXlicious()
+module.exports = new LatexPlus()

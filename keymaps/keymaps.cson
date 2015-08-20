@@ -1,8 +1,8 @@
 '.platform-darwin atom-text-editor':
-  'ctrl-shift-C': 'texlicious:compile'
+  'ctrl-shift-C': 'latex-plus:compile'
 
 '.platform-linux atom-text-editor':
-  'ctrl-shift-C': 'texlicious:compile'
+  'ctrl-shift-C': 'latex-plus:compile'
 
 '.platform-win32 atom-text-editor':
-  'ctrl-shift-C': 'texlicious:compile'
+  'ctrl-shift-C': 'latex-plus:compile'

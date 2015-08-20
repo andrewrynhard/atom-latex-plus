@@ -146,3 +146,6 @@
 
 ## 0.5.11
   * Fix an error caused by a missing configuration file.
+
+## 0.6.0
+  * Renamed package

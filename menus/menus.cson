@@ -2,9 +2,9 @@
   {
     label: 'Packages'
     'submenu': [
-      label: 'TeXlicious'
+      label: 'LaTeX-Plus'
       'submenu': [
-        { label: 'Compile', command: 'texlicious:compile' }
+        { label: 'Compile', command: 'latex-plus:compile' }
       ]
     ]
   }

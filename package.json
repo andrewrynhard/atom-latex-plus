@@ -10,7 +10,7 @@
     "xelatex",
     "lualatex"
   ],
-  "repository": "https://github.com/andrewrynhard/atom-texlicious",
+  "repository": "https://github.com/andrewrynhard/atom-latex-plus",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
@@ -26,6 +26,6 @@
     }
   },
   "activationCommands": {
-    "atom-workspace": "texlicious:compile"
+    "atom-workspace": "latex-plus:compile"
   }
 }
