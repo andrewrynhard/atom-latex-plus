@@ -155,3 +155,6 @@
 
 ## 0.6.1
   * Pushed to fix apm publish error.
+
+## 0.6.2
+  * Fixed demo gif.

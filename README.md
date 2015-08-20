@@ -23,4 +23,4 @@ Atom package manager or `apm install latex-plus`.
 ````
 
 ## Demo
-![Alt text](/demo.gif?raw=true)
+![demo](https://cloud.githubusercontent.com/assets/3383143/9396324/eaa8358e-4748-11e5-8385-1a55967daeb4.gif)
