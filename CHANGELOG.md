@@ -158,3 +158,27 @@
 
 ## 0.6.2
   * Fixed demo gif.
+
+## 0.7.0
+  * Use babel for es6/es7 features
+
+    This project now uses babel instead of coffeescript. The overall stability of
+    this package has also been improved and the stategy has been changed to an event
+    based API. In addition to this change the following features were improved upon:
+
+      * Project management.
+      * LaTeX error handling.
+      * Status indication.
+
+    LaTeX-Plus now uses project configuration files generated automatically based on
+    the directory name of the Atom project. An option to edit the file manually is
+    also available in case the default values are not desired. This feature will be
+    improved upon by using a custom HTML layout for editing as a way to restrict
+    access to any metadata that LaTeX-Plus uses. Another planned feature is
+    generation of a skeleton project. The following feature was included
+
+      * Event based validation.
+
+    This feature enables Latex-Plus to watch for any changes to configuration files
+    that change its behavior and validates them upon editing. The next planned
+    feature is a project outline that links to sections/subsections in the project.
