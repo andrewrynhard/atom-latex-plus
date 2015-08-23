@@ -26,7 +26,7 @@ LaTeX for Atom.
 After installing LaTeX-Plus a TeX bin path must be specified in the package settings.
 ## Screencasts
 #### Compiling:
-![demo](https://cloud.githubusercontent.com/assets/3383143/9396324/eaa8358e-4748-11e5-8385-1a55967daeb4.gif)
+![screencast](https://raw.githubusercontent.com/andrewrynhard/atom-latex-plus/resources/gif/compile.gif)
 
 #### Error Detection:
-![demo](https://cloud.githubusercontent.com/assets/3383143/9396324/eaa8358e-4748-11e5-8385-1a55967daeb4.gif)
+![screencast](https://raw.githubusercontent.com/andrewrynhard/atom-latex-plus/resources/gif/errors.gif)
