@@ -1,6 +1,0 @@
-{
-  "project": "LaTeX-Plus Example",
-  "root": "main.tex",
-  "program": "xelatex",
-  "output": ".latex"
-}

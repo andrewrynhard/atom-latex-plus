@@ -5,6 +5,7 @@
       label: 'LaTeX-Plus'
       'submenu': [
         { label: 'Compile', command: 'latex-plus:compile' }
+        { label: 'Edit', command: 'latex-plus:edit' }
       ]
     ]
   }

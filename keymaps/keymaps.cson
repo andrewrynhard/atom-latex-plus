@@ -1,8 +1,11 @@
-'.platform-darwin atom-text-editor':
-  'ctrl-shift-C': 'latex-plus:compile'
+".platform-darwin atom-text-editor":
+  "cmd-;": "latex-plus:compile"
+  "cmd-'": "latex-plus:edit"
 
-'.platform-linux atom-text-editor':
-  'ctrl-shift-C': 'latex-plus:compile'
+".platform-linux atom-text-editor":
+  "ctrl-;": "latex-plus:compile"
+  "ctrl-'": "latex-plus:edit"
 
-'.platform-win32 atom-text-editor':
-  'ctrl-shift-C': 'latex-plus:compile'
+".platform-win32 atom-text-editor":
+  "ctrl-;": "latex-plus:compile"
+  "ctrl-'": "latex-plus:edit"
