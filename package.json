@@ -2,13 +2,15 @@
   "name": "latex-plus",
   "main": "./lib/main",
   "version": "0.6.2",
-  "description": "Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.",
+  "description": "LaTeX for Atom.",
   "keywords": [
     "tex",
     "latex",
     "pdflatex",
     "xelatex",
-    "lualatex"
+    "lualatex",
+    "texlive",
+    "miktex"
   ],
   "repository": "https://github.com/andrewrynhard/atom-latex-plus",
   "license": "MIT",

@@ -1,26 +1,32 @@
 # LaTeX-Plus
-[![Build Status](https://travis-ci.org/andrewrynhard/atom-latex-plus.svg?branch=master)](https://travis-ci.org/andrewrynhard/atom-latex-plus)
+
 [![Plugin installs!](https://img.shields.io/apm/dm/latex-plus.svg?style=flat-square)](https://atom.io/packages/latex-plus)
 [![Package version!](https://img.shields.io/apm/v/latex-plus.svg?style=flat-square)](https://atom.io/packages/latex-plus)
 
-Productivity tools for pdfLaTeX, LuaLaTeX, and XeLaTeX flavors of LaTeX.
+LaTeX for Atom.
 
-## Installing
-Atom package manager or `apm install latex-plus`.
+## Status
+| Master | Develop |
+|:-----------|:------------|
+| [![Build Status](https://travis-ci.org/andrewrynhard/atom-latex-plus.svg?branch=master)](https://travis-ci.org/andrewrynhard/atom-latex-plus)       |        [![Build Status](https://travis-ci.org/andrewrynhard/atom-latex-plus.svg?branch=develop)](https://travis-ci.org/andrewrynhard/atom-latex-plus)
+
+## About
+  A `latexmk` wrapper developed for [Atom](https://atom.io) with simplicity in mind.
+##### Features
+  * Project management.
+  * Error detection.
+  * TEXINPUTS.
 
 ## Usage
-  * Define a project configuration file, `tex.json`, in the root of you latex project.
-  * Compile the project with `ˆ⇧C`.
+  * Open a directory containing your LaTeX project.
+  * Compile.
+  * Enjoy!
 
-## Project Configuration Example
-```` json
-{
-  "project": "Example LaTeX Project",
-  "root": "main.tex",
-  "program": "xelatex",
-  "output": ".latex"
-}
-````
+#####  NOTE:
+After installing LaTeX-Plus a TeX bin path must be specified in the package settings.
+## Screencasts
+#### Compiling:
+![demo](https://cloud.githubusercontent.com/assets/3383143/9396324/eaa8358e-4748-11e5-8385-1a55967daeb4.gif)
 
-## Demo
+#### Error Detection:
 ![demo](https://cloud.githubusercontent.com/assets/3383143/9396324/eaa8358e-4748-11e5-8385-1a55967daeb4.gif)
