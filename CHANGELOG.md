@@ -174,3 +174,6 @@
 ## 0.7.1
   * Bug fixes.
   * Changed the 'path' key in the project configuration to 'projectPath.'
+
+## 0.7.2
+  * Pushed to fix apm publish error.
