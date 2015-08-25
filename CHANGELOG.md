@@ -170,3 +170,7 @@
       * Project management.
       * LaTeX error handling.
       * Status indication.
+
+## 0.7.1
+  * Bug fixes.
+  * Changed the 'path' key in the project configuration to 'projectPath.'
