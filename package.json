@@ -18,7 +18,7 @@
     "atom": ">=1.0.0 <2.0.0"
   },
   "dependencies": {
-    "atom-message-panel": "*"
+    "atom-message-panel": "latest"
   },
   "consumedServices": {
     "status-bar": {
