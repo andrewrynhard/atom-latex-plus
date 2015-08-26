@@ -182,4 +182,7 @@
   * Improved error handling.
 
 ## 0.7.4
-  * Fix missing dependency
+  * Fixed a missing dependency.
+
+## 0.7.5
+  * Fixed an error that caused the message view to fail on stderr messages.
