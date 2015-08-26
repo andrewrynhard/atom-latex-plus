@@ -186,3 +186,6 @@
 
 ## 0.7.5
   * Fixed an error that caused the message view to fail on stderr messages.
+
+## 0.7.6
+  * Changed how latexmk stderr is displayed.
