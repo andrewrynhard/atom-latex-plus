@@ -177,3 +177,6 @@
 
 ## 0.7.2
   * Pushed to fix apm publish error.
+
+## 0.7.3
+  * Improved error handling.
