@@ -180,3 +180,6 @@
 
 ## 0.7.3
   * Improved error handling.
+
+## 0.7.4
+  * Fix missing dependency
