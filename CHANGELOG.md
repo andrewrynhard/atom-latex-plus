@@ -189,3 +189,7 @@
 
 ## 0.7.6
   * Changed how latexmk stderr is displayed.
+
+## 0.7.7
+  * Updated README with warning about beta status.
+  * Fixed the message type of latexmk errors.
