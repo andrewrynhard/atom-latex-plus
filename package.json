@@ -1,7 +1,7 @@
 {
   "name": "latex-plus",
   "main": "./lib/main",
-  "version": "0.7.6",
+  "version": "0.7.7",
   "description": "LaTeX for Atom.",
   "keywords": [
     "tex",
