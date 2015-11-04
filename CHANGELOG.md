@@ -193,3 +193,6 @@
 ## 0.7.7
   * Updated README with warning about beta status.
   * Fixed the message type of latexmk errors.
+
+## 0.7.8
+  * Added option to enable/disable automatically opening the output.
