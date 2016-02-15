@@ -51,13 +51,15 @@ Due to the beta status of this package, project configuration files will be over
 
 ###### OS X
 * compile project: `cmd-;`
+* sync project: `alt-cmd-;`
 * edit project: `cmd-'`
-* clean project: `alt-cmd-;`
+* clean project: `alt-cmd-'`
 
 ###### Linux and Windows
 * compile project: `ctrl-;`
+* sync project `ctrl-alt-;`
 * edit project: `ctrl-'`
-* clean project: `ctrl-alt-;`
+* clean project: `ctrl-alt-'`
 
 ## Screencasts
 #### Compiling:
