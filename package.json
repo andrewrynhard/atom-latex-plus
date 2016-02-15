@@ -17,7 +17,14 @@
   "engines": {
     "atom": ">=1.0.0 <2.0.0"
   },
+  "devDependencies": {
+    "babel": "5.8.x",
+    "eslint": "^1.0.0",
+    "babel-eslint": "^4.0.5"
+  },
   "dependencies": {
+    "babel-core": "5.8.x",
+    "babel-runtime": "5.8.x",
     "atom-message-panel": "latest",
     "rimraf": "latest"
   },
