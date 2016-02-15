@@ -206,3 +206,6 @@
 
 ## 0.8.2
   * Fixed a bug that stopped the status bar message from being updated.
+
+## 0.8.3
+  * Pushed to fix apm publish error.
