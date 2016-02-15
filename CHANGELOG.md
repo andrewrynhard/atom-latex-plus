@@ -203,5 +203,6 @@
 
 ## 0.8.1
   * Merged #32 Use latexmk for cleaning.
-## 0.8.1
+
+## 0.8.2
   * Fixed a bug that stopped the status bar message from being updated.
