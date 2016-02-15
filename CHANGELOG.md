@@ -200,3 +200,6 @@
 ## 0.8.0
   * Merged #27 Synctex support.
   * Merged #30 Per project latexmk settings.
+
+## 0.8.1
+  * Merged #32 Use latexmk for cleaning.
