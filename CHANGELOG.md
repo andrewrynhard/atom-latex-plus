@@ -196,3 +196,7 @@
 
 ## 0.7.8
   * Added option to enable/disable automatically opening the output.
+
+## 0.8.0
+  * Merged #27 Synctex support.
+  * Merged #30 Per project latexmk settings.
