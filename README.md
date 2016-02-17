@@ -29,9 +29,10 @@ apm link
 
 ## Usage
 #### Quick Start
-  1. Configure `TeX Bin` in the package settings.
-  1. Open a tex file within the directory containing your LaTeX project.
-  2. Compile to activate LaTeX-Plus.
+  1. Ensure a latex distribution is installed, and that latexmk in your `PATH`.
+  2. Configure `TeX Bin` in the package settings to the location of your latex distribution's installation location.
+  3. Open a tex file within the directory containing your LaTeX project.
+  4. `edit` your project's configuration file.
 
 #### Project Configuration
 LaTeX-Plus keeps metadata on projects using a `JSON` formatted file that is
