@@ -209,3 +209,6 @@
 
 ## 0.8.3
   * Pushed to fix apm publish error.
+
+## 0.8.4
+  * Fixed #23 and #28.
