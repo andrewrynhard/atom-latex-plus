@@ -212,3 +212,17 @@
 
 ## 0.8.4
   * Fixed #23 and #28.
+
+## 0.8.5
+ Merge #37, #39, #41, #43, #44
+
+# Contributors
+* svkurowski
+* shouya
+* dpo
+* Muffinpirate
+* swhgoon
+* uliska
+* mglont
+* dkerzig
+* izuzak
