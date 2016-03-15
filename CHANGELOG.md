@@ -214,7 +214,10 @@
   * Fixed #23 and #28.
 
 ## 0.8.5
- Merge #37, #39, #41, #43, #44
+ * Merge #37, #39, #41, #43, #44
+
+## 0.8.6
+ * Merge #45
 
 # Contributors
 * svkurowski
