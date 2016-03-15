@@ -51,13 +51,15 @@ Due to the beta status of this package, project configuration files will be over
 #### Keymaps
 
 ###### OS X
-* compile project: `cmd-;`
+* compile and sync project: `cmd-;`
+* compile project: `alt-cmd-:`
 * sync project: `alt-cmd-;`
 * edit project: `cmd-'`
 * clean project: `alt-cmd-'`
 
 ###### Linux and Windows
-* compile project: `ctrl-;`
+* compile and sync project: `ctrl-;`
+* compile project: `alt-ctrl-:`
 * sync project `ctrl-alt-;`
 * edit project: `ctrl-'`
 * clean project: `ctrl-alt-'`

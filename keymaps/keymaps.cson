@@ -1,17 +1,20 @@
 ".platform-darwin atom-text-editor":
-  "cmd-;": "latex-plus:compile"
+  "cmd-;": "latex-plus:compile-and-sync"
+  "alt-cmd-:": "latex-plus:compile"
   "cmd-'": "latex-plus:edit"
   "alt-cmd-;": "latex-plus:sync"
   "alt-cmd-'": "latex-plus:clean"
 
 ".platform-linux atom-text-editor":
-  "ctrl-;": "latex-plus:compile"
+  "ctrl-;": "latex-plus:compile-and-sync"
+  "alt-ctrl-:": "latex-plus:compile"
   "ctrl-'": "latex-plus:edit"
   "ctrl-alt-;": "latex-plus:sync"
   "ctrl-alt-'": "latex-plus:clean"
 
 ".platform-win32 atom-text-editor":
-  "ctrl-;": "latex-plus:compile"
+  "ctrl-;": "latex-plus:compile-and-sync"
+  "alt-ctrl-:": "latex-plus:compile"
   "ctrl-'": "latex-plus:edit"
   "ctrl-alt-;": "latex-plus:sync"
   "ctrl-alt-'": "latex-plus:clean"
