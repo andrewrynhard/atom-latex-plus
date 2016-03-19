@@ -219,6 +219,8 @@
 ## 0.8.6
  * Merge #45
 
+## 0.8.7
+* Added [pdf-view](https://github.com/izuzak/atom-pdf-view) as a dependency.
 # Contributors
 * svkurowski
 * shouya
