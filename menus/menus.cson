@@ -4,7 +4,9 @@
     'submenu': [
       label: 'LaTeX-Plus'
       'submenu': [
+        { label: 'Compile and Sync', command: 'latex-plus:compile-and-sync' }
         { label: 'Compile', command: 'latex-plus:compile' }
+        { label: 'Sync', command: 'latex-plus:sync' }
         { label: 'Edit', command: 'latex-plus:edit' }
         { label: 'Clean', command: 'latex-plus:clean' }
       ]
