@@ -228,6 +228,7 @@
   * Configurable output path
   * Copy and symlink options for output
 * Project settings are now saved in the root of the project
+* Fixes an issue caused by unescaped windows paths
 
 # Contributors
 * svkurowski
