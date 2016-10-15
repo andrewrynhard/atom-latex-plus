@@ -221,6 +221,14 @@
 
 ## 0.8.7
 * Added [pdf-view](https://github.com/izuzak/atom-pdf-view) as a dependency.
+
+## 0.9.0
+* Merge #71
+  * Global and project level  settings
+  * Configurable output path
+  * Copy and symlink options for output
+* Project settings are now saved in the root of the project
+
 # Contributors
 * svkurowski
 * shouya
@@ -232,3 +240,4 @@
 * mglont
 * dkerzig
 * izuzak
+* dn0sar
