@@ -18,8 +18,9 @@ LaTeX for Atom.
 #### Quick Start
   1. Ensure a latex distribution is installed, and that `latexmk` in your `PATH`.
   2. Configure `TeX Bin` in the package settings to the location of your latex distribution's installation location.
-  3. Open a tex file within the directory containing your LaTeX project.
-  4. `compile` the project.
+  3. Ensure that the `language-latex` package for Atom is installed.
+  4. Open a tex file within the directory containing your LaTeX project.
+  5. `compile` the project.
 
 #### Project Configuration
 LaTeX-Plus keeps metadata on projects using a `JSON` formatted file that is
