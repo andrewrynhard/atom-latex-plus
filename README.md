@@ -43,10 +43,9 @@ liking.
   * `title: LaTeX-Plus Project`
   * `root: main.tex`
   * `program: pdflatex`
-  * `output: .latex`
 
 ###### Caveat
-Due to the beta status of this package, project configuration files will be overwritten upon upgrading. Once the project configuration API has stablized a more permanent solution will exist.
+Due to the beta status of this package, project configuration files will be overwritten upon upgrading. Once the project configuration API has stabilized a more permanent solution will exist.
 
 #### Keymaps
 
