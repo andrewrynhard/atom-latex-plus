@@ -1,3 +1,4 @@
+🚨 This project is no longer maintained. If you would like to take over ownership, please contact me via email. 🚨
 # LaTeX-Plus
 
 [![Travis branch](https://img.shields.io/travis/andrewrynhard/atom-latex-plus/master.svg?style=flat-square)]()
